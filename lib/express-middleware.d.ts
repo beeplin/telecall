@@ -1,14 +1,11 @@
-import { Application, NextFunction, Request, Response } from 'express'
+import { Application, NextFunction, Request, Response } from 'express';
 export interface Context {
-  req: Request
-  res: Response
+    req: Request;
+    res: Response;
 }
-declare type Headers = Record<string, string>
+declare type Headers = Record<string, string>;
 interface Options {
-  headers: Headers
+    headers: Headers;
 }
-export default function (
-  app: Application,
-  options?: Options,
-): (req: Request, res: Response, next: NextFunction) => Promise<void>
-export {}
+export default function (app: Application, options?: Options): (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export {};

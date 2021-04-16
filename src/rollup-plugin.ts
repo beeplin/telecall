@@ -6,12 +6,12 @@ const { resourceMatcher } = config
 export default function () {
   return {
     name: 'telecall',
-    resolveId(resourcePath: string) {
-      if (resourceMatcher.test(resourcePath)) return resourcePath
+    resolveId(id: string) {
+      if (resourceMatcher.test(id)) return id
       return null
     },
-    load(resourcePath: string) {
-      if (resourceMatcher.test(resourcePath)) return mockResource(resourcePath, config)
+    load(id: string) {
+      if (resourceMatcher.test(id)) return mockResource(id, config)
       return null
     },
   }

@@ -4,29 +4,32 @@ Call back-end NodeJS functions directly from front-end. No HTTP API. Perfect typ
 
 Clone [Telecall Demo](https://github.com/beeplin/telecall-demo) and run it in VS Code. You can see typescript works smoothly across the `www` codebase and the `server` codebase.
 
-For example:
+## Example
 
 ```js
 // server/src/foo/update_user.tele.ts: back-end code for express
-export default async function updateUser({ nickname }: UserUpdateData) {
-  const { res, req } = this
+
+// NOTE: This is the back-end function you are about to import from front-end
+export default async function updateUser({ req, res }: Context, { name }: UserUpdateData) {
   // ...
   return user as User
 }
 ```
 
 ```js
-// www/src/components/UserFrom.js: front-end code for webpack, rollup, or vite
+// somewhere in your front-end code
 import telecall from 'telecall'
+
+// NOTE: import the back-end function directly
 import updateUser from '../../../server/src/foo/update_user.tele.ts'
 
 // ...
 
-telecall(updateUser, { nickname: 'new name' }).then((user) => console.log(user))
-//       ~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~          ~~~~ <== All automatically typed!!
+telecall(updateUser, { name: 'beep' }).then((user) => console.log(user))
+//       ~~~~~~~~~~  ~~~~~~~~~~~~~~          ~~~~ <== parameters and result automatically typed!!
 ```
 
-`telecall` now supports the following frameworks:
+## Supported frameworks
 
 Front-end
 
@@ -107,10 +110,10 @@ Back-end
    import telecall from 'telecall/lib/express-middleware'
 
    const app = express()
-   app.use(express.json())
+   app.use(express.json()) // NOTE: use express.json() before telecall(app)
    app.use(telecall(app)) // <- Here it is!
    // ...
-   const port = app.get('port') // <- Telecall gets the port from `telecall.config.js` and put it here
+   const port = app.get('port') // <- Telecall reads port from `telecall.config.js` and put it here
    app.listen(port)
    ```
 
@@ -118,20 +121,19 @@ Back-end
 
    ```js
    // server/src/foo/bar/update-user.tele.ts
-   export default async function updateUser(this: Context, { nickname }: UserUpdateData) {
-   const { res, req } = this // <- your can access `req` and `res` in `this` if needed
+   export default async function updateUser({ res, req }: Context, { name }: UserUpdateData) {
    // ...
    return user as User
    }
    ```
 
    ```js
-   // www/src/components/UserFrom.ts(x)
+   // www/src/components/SomeComponent.ts(x)
    import telecall from 'telecall'
    import updateUser from '../../../server/src/foo/bar/update-user.tele.ts'
 
    // ...
 
-   telecall(updateUser, { nickname: 'new name' }).then((user) => console.log(user))
-   //       ~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~          ~~~~ <== All automatically typed!!
+   telecall(updateUser, { name: 'beep' }).then((user) => console.log(user))
+   //       ~~~~~~~~~~  ~~~~~~~~~~~~~~          ~~~~ <== All automatically typed!!
    ```

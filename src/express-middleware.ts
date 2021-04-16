@@ -35,7 +35,7 @@ export default function (app: Application, options = {} as Options) {
     const location = path.resolve(resolverBasePath, relativePath)
     const func = await import(location).then((m) => m.default)
     const context: Context = { req, res }
-    const result = await func.call(context, ...req.body)
+    const result = await func(context, ...req.body)
     res.set(headers).status(200).json(result).end()
 
     return

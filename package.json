@@ -6,8 +6,8 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "prettier": "prettier . --write --ignore-path .gitignore",
-    "build": "tsc && npm run prettier",
-    "preversion": "npm run build"
+    "build": "tsc",
+    "preversion": "npm run build && npm run prettier"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,6 @@
   "homepage": "https://github.com/beeplin/telecall#readme",
   "devDependencies": {
     "@types/express": "^4.17.11",
-    "@types/loader-utils": "^2.0.2",
     "@types/node": "^14.14.37",
     "express": "^4.17.1",
     "prettier": "^2.2.1",

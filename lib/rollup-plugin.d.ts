@@ -1,5 +1,5 @@
 export default function (): {
-  name: string
-  resolveId(resourcePath: string): string | null
-  load(resourcePath: string): string | null
-}
+    name: string;
+    resolveId(id: string): string | null;
+    load(id: string): string | null;
+};
