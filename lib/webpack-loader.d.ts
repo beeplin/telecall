@@ -1,1 +1,1 @@
-export default function (this: any, source: string): string;
+export default function (this: any, source: string): string

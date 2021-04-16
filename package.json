@@ -1,6 +1,6 @@
 {
   "name": "telecall",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Call back-end NodeJS functions directly from front-end. No HTTP API. Perfect typescript Support.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
