@@ -137,3 +137,28 @@ Back-end
    telecall(updateUser, { name: 'beep' }).then((user) => console.log(user))
    //       ~~~~~~~~~~  ~~~~~~~~~~~~~~          ~~~~ <== All automatically typed!!
    ```
+
+## Express Middleware Options
+
+To add more headers for the response, pass `extraHeaders` to the middleware:
+
+```js
+app.use(
+  telecall(app, {
+    extraHeaders: { for: 'bar' },
+  }),
+)
+```
+
+If your back-end is written in typescript and will be compiled and run as javascript in production, your resolver functions would be probably renamed from `*.ts` to `*.js` and moved from `/server/src` to `/server/dist`. In this case, to make sure telecall work on development as well as production, you can pass a `convertResolverPath` function to the middleware:
+
+```js
+app.use(
+  telecall(app, {
+    convertResolverPath: (original) =>
+      original.endsWith('.ts')
+        ? original.replace(/^src\/(.*?)\.ts$/, 'dist/$1.js')
+        : original,
+  }),
+)
+```

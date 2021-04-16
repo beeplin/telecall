@@ -5,7 +5,8 @@ export interface Context {
 }
 declare type Headers = Record<string, string>
 interface Options {
-  headers: Headers
+  extraHeaders?: Headers
+  convertResolverPath?: (input: string) => string
 }
 export default function (
   app: Application,

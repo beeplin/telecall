@@ -10,16 +10,18 @@ export interface Context {
 type Headers = Record<string, string>
 
 interface Options {
-  headers: Headers
+  extraHeaders?: Headers
+  convertResolverPath?: (input: string) => string
 }
 
 const { resolverBasePath, requestEndpoint } = getConfig()
 const { port, pathname: requestBasePath } = requestEndpoint
 const requestBasePathLength = requestBasePath.length
 
-export default function (app: Application, options = {} as Options) {
+export default function (app: Application, options: Options = {}) {
   app.set('port', port)
-  const headers = { 'Content-Type': 'application/json', ...options.headers }
+  const { extraHeaders = {}, convertResolverPath = (s) => s } = options
+  const headers = { 'Content-Type': 'application/json', ...extraHeaders }
 
   return async function (req: Request, res: Response, next: NextFunction) {
     if (req.method !== 'POST' || !req.path.startsWith(requestBasePath)) {
@@ -32,7 +34,7 @@ export default function (app: Application, options = {} as Options) {
     }
 
     const relativePath = req.path.substr(requestBasePathLength)
-    const location = path.resolve(resolverBasePath, relativePath)
+    const location = path.resolve(resolverBasePath, convertResolverPath(relativePath))
     const func = await import(location).then((m) => m.default)
     const context: Context = { req, res }
     const result = await func(context, ...req.body)
