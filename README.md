@@ -60,7 +60,7 @@ Back-end
    module.exports = (env) => ({
      resourceMatcher: /\.tele\.(js|ts)$/,
      requestEndpoint: 'http://localhost:3000/api/',
-     resolverBasePath: './server/src',
+     resolverBasePath: './server/',
    })
    ```
 
