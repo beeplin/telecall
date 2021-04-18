@@ -19,8 +19,7 @@ export default async function updateUser({ req, res }: Context, { name }: UserUp
 ```js
 // somewhere in your front-end code
 import telecall from 'telecall'
-
-// NOTE: import the back-end function directly
+// import from the actual file path of the back-end function on disk
 import updateUser from '../../../server/src/foo/update_user.tele.ts'
 
 // ...
@@ -85,7 +84,7 @@ Back-end
      // ...
      module: {
        rules: [
-         // ... after your js/ts related rules
+         // ... after your js/ts-related rules
          telecall(),
        ],
      },
@@ -99,7 +98,10 @@ Back-end
 
    export default {
      // ...
-     plugins: [/* ... after your js/ts related plugins */ telecall()],
+     plugins: [
+       // ... after your js/ts-related plugins
+       telecall(),
+     ],
    }
    ```
 
@@ -107,11 +109,11 @@ Back-end
 
    ```js
    import express from 'express'
-   import telecall from 'telecall/lib/express-middleware'
+   import telecall from 'telecall/lib/express'
 
    const app = express()
    app.use(express.json()) // NOTE: use express.json() before telecall(app)
-   app.use(telecall(app)) // <- Here it is!
+   app.use(telecall.path, telecall.middleware()) // <- Here it is!
    // ...
    const port = app.get('port') // <- Telecall reads port from `telecall.config.js` and put it here
    app.listen(port)
@@ -130,6 +132,7 @@ Back-end
    ```js
    // www/src/components/SomeComponent.ts(x)
    import telecall from 'telecall'
+   // import from the actual file path of the back-end function on disk
    import updateUser from '../../../server/src/foo/bar/update-user.tele.ts'
 
    // ...
@@ -143,21 +146,27 @@ Back-end
 To add more headers for the response, pass `extraHeaders` to the middleware:
 
 ```js
+import telecall from 'telecall/lib/express'
+//...
 app.use(
-  telecall(app, {
+  telecall.path,
+  telecall.middleware({
     extraHeaders: { for: 'bar' },
   }),
 )
 ```
 
-If your back-end is written in typescript and will be compiled and run as javascript in production, your resolver functions would be probably renamed from `*.ts` to `*.js` and moved from `/server/src` to `/server/dist`. In this case, to make sure telecall work on development as well as production, you can pass a `convertResolverPath` function to the middleware:
+If your back-end is written in typescript and compiled into javascript in production, your resolver functions would probably be renamed from `*.ts` to `*.js` and moved from `/server/src` to `/server/dist` after building. In this case, to make sure telecall work in both development and production, you can pass a `convertResolverPath` function to the middleware:
 
 ```js
+import telecall from 'telecall/lib/express'
+//...
 app.use(
-  telecall(app, {
+  telecall.path,
+  telecall.middleware({
     convertResolverPath: (original) =>
       original.endsWith('.ts')
-        ? original.replace(/^src\/(.*?)\.ts$/, 'dist/$1.js')
+        ? original.replace(/^/src\/(.*?)\.ts$/, '/dist/$1.js')
         : original,
   }),
 )
