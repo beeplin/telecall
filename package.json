@@ -1,6 +1,6 @@
 {
   "name": "telecall",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Call back-end NodeJS functions directly from front-end. No HTTP API. Perfect typescript Support.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -8,7 +8,7 @@
     "prettier": "prettier . --write --ignore-path .gitignore",
     "tsc": "rm -rf lib && tsc",
     "preversion": "npm run tsc && npm run prettier",
-    "postversion": "git commit --amend --no-edit"
+    "postversion": "git stage. && git commit --amend --no-edit"
   },
   "repository": {
     "type": "git",
