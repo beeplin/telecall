@@ -3,7 +3,7 @@ import { getConfig, mockResource } from './utils'
 const config = getConfig()
 const { resourceMatcher } = config
 
-export default function () {
+export default function telecallPlugin() {
   return {
     name: 'telecall',
     resolveId(id: string) {

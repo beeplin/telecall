@@ -59,7 +59,7 @@ Back-end
    module.exports = (env) => ({
      resourceMatcher: /\.tele\.(js|ts)$/,
      requestEndpoint: 'http://localhost:3000/api/',
-     resolverBasePath: './server/',
+     resolverRootDir: './server/',
    })
    ```
 
@@ -71,9 +71,9 @@ Back-end
 
      Hijacked imports are turned into network requests to this endpoint.
 
-   - `resolverBasePath`:
+   - `resolverRootDir`:
 
-     At the back-end, Telecall finds the corresponding resolver functions within this base path, runs them, and takes the results back to front-end. Just like you are calling local functions seamlessly.
+     At the back-end, Telecall finds the corresponding resolver functions within this root directory, runs them, and takes the results back to front-end. Just like you are calling local functions seamlessly.
 
 1. Modify your `webpack.config.js` (or the `webpack` related part in `vue.config.js`, etc.):
 

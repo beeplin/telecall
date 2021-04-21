@@ -14,7 +14,7 @@ interface Options {
   convertResolverPath?: (input: string) => string
 }
 
-const { resolverBasePath, requestEndpoint } = getConfig()
+const { resolverRootDir, requestEndpoint } = getConfig()
 const { port, pathname: requestBasePath } = requestEndpoint
 const defaultHeaders: Headers = { 'Content-Type': 'application/json' }
 
@@ -23,16 +23,15 @@ export default {
   path: requestBasePath,
   middleware({ extraHeaders = {}, convertResolverPath = (s) => s }: Options = {}) {
     const headers = { ...defaultHeaders, ...extraHeaders }
-    return async function (req: Request, res: Response, next: NextFunction) {
+    return async (req: Request, res: Response, next: NextFunction) => {
       if (!req.body) {
         next(new Error(`'app.use(express.json())' is missing.`))
         return
       }
-      const location = path.join(resolverBasePath, convertResolverPath(req.path))
+      const location = path.join(resolverRootDir, convertResolverPath(req.path))
       const func = await import(location).then((m) => m.default)
       const result = await func({ req, res }, ...req.body)
       res.set(headers).status(200).json(result)
-      return
     }
   },
 }

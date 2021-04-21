@@ -2,6 +2,7 @@ import { getConfig, mockResource } from './utils'
 
 const config = getConfig()
 
-export default function (this: any, source: string) {
+export default function telecallLoader() {
+  // @ts-ignore
   return mockResource(this.resourcePath, config)
 }
