@@ -1,4 +1,4 @@
-import { TeleClient } from '../../../src/'
+import { TeleClient } from '../../../lib/'
 
 export const client = new TeleClient(
   fetch,

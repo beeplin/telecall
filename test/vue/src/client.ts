@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-relative-packages
-import { TeleClient } from '../../../src/client'
+import { TeleClient } from '../../../lib'
 
 export const client = new TeleClient(
   fetch,
