@@ -1,0 +1,107 @@
+{
+  // appearance
+  "editor.fontFamily": "'等距更纱黑体 SC', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 16,
+  "editor.minimap.maxColumn": 80,
+  "editor.minimap.showSlider": "always",
+  "editor.minimap.size": "fill",
+  "editor.mouseWheelZoom": true,
+  "editor.renderControlCharacters": true,
+  "editor.renderWhitespace": "boundary",
+  "terminal.integrated.fontSize": 16,
+  "workbench.colorTheme": "One Dark",
+  "workbench.iconTheme": "material-icon-theme",
+
+  // editing
+  "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.linkedEditing": true, // only supports html, not jsx/tsx
+  "editor.snippetSuggestions": "inline",
+  "editor.suggestSelection": "recentlyUsed",
+  "eslint.alwaysShowStatus": true,
+  "eslint.run": "onType",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "vsintellicode.modify.editor.suggestSelection": "disabled",
+  "moveOn.moveOnFrom": ["'", "\"", "`", "]", "}", ")", ">"],
+
+  // git
+  "git.autofetch": true,
+  "git.confirmSync": true,
+  "git.enableSmartCommit": true,
+  "gitlens.advanced.fileHistoryFollowsRenames": true,
+  "gitlens.codeLens.enabled": false,
+  "gitlens.currentLine.enabled": false,
+
+  // terminal
+  "terminal.integrated.defaultLocation": "editor",
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.scrollback": 100000,
+
+  // test
+  "testExplorer.codeLens": false,
+  "testExplorer.showExpandButton": 5,
+  "testExplorer.sort": "byLocation",
+  "jestTestExplorer.flattenExplorer": true,
+  "coverage-gutters.xmlname": "clover.xml",
+
+  // todo
+  "todo.archive.remove.emptyProjects": false,
+  "todo.colors.cancelled": "#be5046", // dark red
+  "todo.colors.code": "#56b6c2", // cyan
+  "todo.colors.comment": "#5c6370", // comment grey
+  "todo.colors.done": "#98c379", // green
+  "todo.colors.project": "#e5c07b", // light yellow
+  "todo.colors.projectStatistics": "#d19a66", // dark yellow
+  "todo.colors.tag": "#c678dd", // magenta
+  "todo.colors.tags.background": [
+    "#e54545",
+    "#e59f45",
+    "#e5d145",
+    "#ae81ff",
+    "#c678dd" // for todo tag
+  ],
+  "todo.colors.tags.foreground": [
+    "#000000",
+    "#000000",
+    "#000000",
+    "#000000",
+    "#000000",
+    // light yellow
+    "#e5c07b",
+    // comment grey
+    "#5c6370",
+    "#5c6370",
+    "#5c6370",
+    "#5c6370",
+    "#5c6370",
+    "#5c6370"
+  ],
+  "todo.tags.names": [
+    "critical",
+    "high",
+    "low",
+    "today",
+    "TODO",
+    // light yellow
+    "project",
+    // comment grey
+    "started",
+    "done",
+    "lasted",
+    "cancelled",
+    "wasted"
+  ],
+  "todo.embedded.exclude": [
+    "**/.*",
+    "**/.*/**",
+    "**/node_modules/**",
+    "**/package.json"
+  ],
+  "todo.embedded.provider": "ag",
+  "todo.statistics.statusbar.command": "workbench.view.extension.todo",
+
+  "pythonTestExplorer.testFramework": null // 如果安装了 pytest 插件，禁止其自动运行
+}

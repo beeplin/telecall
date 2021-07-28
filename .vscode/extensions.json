@@ -1,0 +1,29 @@
+{
+  "recommendations": [
+    "mhutchie.git-graph",
+    "christian-kohler.path-intellisense",
+    "visualstudioexptteam.vscodeintellicode",
+    "fabiospampinato.vscode-todo-plus",
+    "ryanluker.vscode-coverage-gutters",
+    "wmaurer.change-case",
+    "jrmce.moveon",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "kavod-io.vscode-jest-test-adapter",
+    "tlent.jest-snapshot-language-support",
+    "ypresto.vscode-intelli-refactor",
+    "sburg.vscode-javascript-booster",
+    "chakrounanas.turbo-console-log",
+    "capaj.vscode-standardjs-snippets",
+    "andys8.jest-snippets",
+    "pkief.material-icon-theme",
+    "mskelton.one-dark-theme",
+    "codeinchinese.chineseinputassistant",
+    "nicoespeon.abracadabra",
+    "editorconfig.editorconfig",
+    "eamodio.gitlens",
+    "krizzdewizz.refactorix",
+    "ms-vscode.test-adapter-converter",
+    "hbenl.vscode-test-explorer"
+  ]
+}
