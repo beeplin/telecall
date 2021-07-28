@@ -52,8 +52,7 @@ export class TeleClient implements Client {
     readonly getMethodName = (fn: { name: string; path: string }) =>
       `${fn.path}//${fn.name}`,
   ) {
-    // eslint-disable-next-line
-    this.fetch = fetch === (window && window.fetch) ? fetch.bind(window) : fetch
+    this.fetch = fetch === globalThis.fetch ? fetch.bind(globalThis) : fetch
   }
 
   async call<T extends Fn>(fn: T, ...params: RestParams<T>): PromiseReturnType<T> {
