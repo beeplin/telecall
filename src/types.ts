@@ -1,4 +1,4 @@
-/* eslint-disable  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type Fn = (...params: any[]) => any
 
@@ -19,13 +19,15 @@ export interface TeleRequest<T extends Fn> {
   id: number | string
 }
 
+export interface TeleResponseError {
+  code: number
+  message: string
+  data?: unknown
+}
+
 export interface TeleResponse<T extends Fn> {
   jsonrpc: '2.0'
   result?: UnPromise<ReturnType<T>>
-  error?: {
-    code: number
-    message: string
-    data?: unknown
-  }
+  error?: TeleResponseError
   id: number | string | null
 }

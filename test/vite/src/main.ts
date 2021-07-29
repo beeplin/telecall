@@ -17,5 +17,5 @@ if (app)
       app.innerHTML = `<pre>${JSON.stringify(results, null, 4)}</pre>`
     })
     .catch((error) => {
-      app.innerHTML = error
+      app.innerHTML = String(error)
     })

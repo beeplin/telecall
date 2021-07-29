@@ -1,11 +1,3 @@
-// import { createApp } from 'vue'
-// import App from './App.vue'
-
-// createApp(App).mount('#app')
-
-/* eslint-disable  */
-// import { fn1 as fn1_2 } from '../../server/src/folder/module2.tele'
-// import { fn1 } from '../../server/src/module1.tele'
 import mod2, { fn1 as fn1_2 } from '../../server/src/folder/module2.tele'
 import mod1, { fn1 } from '../../server/src/module1.tele'
 import { client } from './client'
@@ -25,5 +17,5 @@ if (app)
       app.innerHTML = `<pre>${JSON.stringify(results, null, 4)}</pre>`
     })
     .catch((error) => {
-      app.innerHTML = error
+      app.innerHTML = String(error)
     })

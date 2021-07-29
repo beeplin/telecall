@@ -1,6 +1,7 @@
 import type { Ctx } from '../types'
+
 export async function fn1(ctx: Ctx) {
-  return ctx.userId + ' m2 f1'
+  return `${ctx.userId ?? ''} m2 f1`
 }
 
 function fn2(ctx: Ctx, input: number) {

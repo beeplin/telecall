@@ -1,6 +1,5 @@
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-// eslint-disable-next-line import/no-relative-packages
 import telecall from '../../plugins/rollup-plugin-telecall'
 
 export default defineConfig({

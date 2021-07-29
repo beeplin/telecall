@@ -1,11 +1,5 @@
 /// <reference lib="dom" />
-import { Client, Fn, PromiseReturnType, RestParams } from './types'
-export declare class FakeClient implements Client {
-  private readonly ctx
-  constructor(ctx: unknown)
-  reset(): void
-  call<T extends Fn>(fn: T, ...params: RestParams<T>): PromiseReturnType<T>
-}
+import type { Client, Fn, PromiseReturnType, RestParams } from './types'
 export declare class TeleClient implements Client {
   readonly endpoint: string
   readonly tokenPersistence: typeof window.localStorage | 'cookie'

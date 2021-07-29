@@ -1,4 +1,11 @@
-import type { Fn, TeleRequest, TeleResponse, UnPromise } from './types'
+import { join } from 'path'
+import type {
+  Fn,
+  TeleRequest,
+  TeleResponse,
+  TeleResponseError,
+  UnPromise,
+} from './types'
 
 const HTTP_OK = 200
 const HTTP_BAD_REQUEST = 400
@@ -25,11 +32,13 @@ export async function handleTeleRequest<T extends Fn>(
     const result = (await fn(ctx, ...params)) as UnPromise<ReturnType<T>>
     return { status: HTTP_OK, json: { jsonrpc, id, result } }
   } catch (error: unknown) {
-    // @ts-expect-error 2339
-    const { code = 0, message = 'Unknown error', data = JSON.stringify(error) } = error
+    const {
+      code = 0,
+      message = 'Unknown error',
+      data = JSON.stringify(error),
+    } = error as TeleResponseError
     return {
       status: HTTP_BAD_REQUEST,
-      // eslint-disable-next-line
       json: { jsonrpc, id, error: { code, message, data } },
     }
   }
@@ -40,12 +49,10 @@ function getFn<T extends Fn>(
 ): [null, ReturnValue<T>] | [T, null] {
   if (!request) return [null, parseError()]
   const { jsonrpc, method, id } = request
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (jsonrpc !== '2.0' || typeof method !== 'string' || id === undefined)
     return [null, invalidRequest()]
   const [path, name = 'default'] = method.split('//')
-  // eslint-disable-next-line
-  const location: string = require('path').join(process.cwd(), path)
+  const location = join(process.cwd(), path)
   try {
     // eslint-disable-next-line
     const fn = require(location)[name] as T

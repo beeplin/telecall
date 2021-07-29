@@ -13,14 +13,15 @@ export interface TeleRequest<T extends Fn> {
   params?: RestParams<T>
   id: number | string
 }
+export interface TeleResponseError {
+  code: number
+  message: string
+  data?: unknown
+}
 export interface TeleResponse<T extends Fn> {
   jsonrpc: '2.0'
   result?: UnPromise<ReturnType<T>>
-  error?: {
-    code: number
-    message: string
-    data?: unknown
-  }
+  error?: TeleResponseError
   id: number | string | null
 }
 //# sourceMappingURL=types.d.ts.map

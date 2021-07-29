@@ -1,5 +1,3 @@
-/* eslint-disable  */
-
 import mod from '../../server/src/module1.tele'
 import { client } from './client'
 

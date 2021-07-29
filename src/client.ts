@@ -1,7 +1,7 @@
-/* eslint-disable  */
 /// <reference lib="dom" />
 
-import {
+import { TeleError } from './error'
+import type {
   Client,
   Fn,
   PromiseReturnType,
@@ -10,30 +10,6 @@ import {
   TeleResponse,
 } from './types'
 
-export class FakeClient implements Client {
-  constructor(private readonly ctx: unknown) {}
-
-  reset(): void {}
-
-  async call<T extends Fn>(fn: T, ...params: RestParams<T>): PromiseReturnType<T> {
-    return fn(this.ctx, ...params)
-  }
-}
-/* eslint-enable */
-
-class TeleError<T extends Fn> extends Error {
-  code: number
-
-  data: unknown
-
-  constructor(error: Required<TeleResponse<T>>['error']) {
-    super()
-    this.name = 'TeleError'
-    this.code = error.code
-    this.message = error.message
-    this.data = error.data
-  }
-}
 const JSON_RPC_INVALID_REQUEST = -32600
 
 export class TeleClient implements Client {
@@ -73,14 +49,13 @@ export class TeleClient implements Client {
     this.persistTokenFromResponse(response)
     const { jsonrpc, result, error, id } = (await response.json()) as TeleResponse<T>
     if (error) throw new TeleError(error)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (jsonrpc !== '2.0' || id !== request.id)
+    if (jsonrpc !== '2.0' || id !== request.id || result === undefined)
       throw new TeleError({
         code: JSON_RPC_INVALID_REQUEST,
         message: 'Invalid Request',
       })
-    // eslint-disable-next-line
-    return result!
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return result
   }
 
   reset(): void {
