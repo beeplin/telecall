@@ -1,6 +1,6 @@
 import cors from 'cors'
 import express from 'express'
-import { handleTeleRequest } from '../../../src'
+import { handleTeleRequest } from '../../../src/server'
 import type { Fn, TeleRequest } from '../../../src/types'
 
 const PORT = 3300

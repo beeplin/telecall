@@ -16,8 +16,10 @@ function isTele(fullPath, options) {
 
 async function convertTele(fullPath, options) {
   const relativePath = getRelativePath(fullPath, options)
-  const exportedNames = await getExportedNames(fullPath)
-  const content = getContent(exportedNames, relativePath)
+  const code = await getBundledCommonJsCode(fullPath)
+  const paris = getExportedKeyValuePairs(code)
+  const keys = getExportedKeys(paris)
+  const content = getConvertedContent(keys, relativePath)
   debugGetTeleContent(content, fullPath)
   return content
 }
@@ -28,7 +30,7 @@ function getRelativePath(fullPath, options) {
   )
 }
 
-async function getExportedNames(fullPath) {
+async function getBundledCommonJsCode(fullPath) {
   // use esbuild to transpile and bundle so that `exports * from ...` also works
   const output = await build({
     entryPoints: [fullPath],
@@ -37,19 +39,25 @@ async function getExportedNames(fullPath) {
     write: false,
   })
   const code = output.outputFiles[0].text
-  // find the `__export(exports, {...})` part in the bundle
+  return code
+}
+
+function getExportedKeyValuePairs(code) {
+  // find the `__export(exports, {...})` part in the commonjs code bundled by esbuild
   const match = /__export\(exports, \{\s+(.*?)\s+\}\);/su.exec(code)
   const text = match?.[1]
   if (!text) throw new Error('Error when parsing esbuild bundle to get exported names')
-  // get the keys of `exports` in the bundle
-  const names = text.split(',\n').map((line) => line.split(':')[0].trim())
-  return names
+  return text
 }
 
-function getContent(exportedNames, relativePath) {
-  return exportedNames.reduce((acc, name) => {
-    const prefix = name === 'default' ? 'default' : `const ${name} =`
-    return `${acc}export ${prefix} { path: '${relativePath}', name: '${name}' };\n`
+function getExportedKeys(text) {
+  return text.split(',\n').map((line) => line.split(':')[0].trim())
+}
+
+function getConvertedContent(keys, relativePath) {
+  return keys.reduce((acc, key) => {
+    const prefix = key === 'default' ? 'default' : `const ${key} =`
+    return `${acc}export ${prefix} { path: '${relativePath}', name: '${key}' };\n`
   }, '\n')
 }
 
