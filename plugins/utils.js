@@ -17,8 +17,8 @@ function isTele(fullPath, options) {
 async function convertTele(fullPath, options) {
   const relativePath = getRelativePath(fullPath, options)
   const code = await getBundledCommonJsCode(fullPath)
-  const paris = getExportedKeyValuePairs(code)
-  const keys = getExportedKeys(paris)
+  const paires = getExportedKeyValuePairs(code)
+  const keys = getExportedKeys(paires)
   const content = getConvertedContent(keys, relativePath)
   debugGetTeleContent(content, fullPath)
   return content
@@ -31,7 +31,6 @@ function getRelativePath(fullPath, options) {
 }
 
 async function getBundledCommonJsCode(fullPath) {
-  // use esbuild to transpile and bundle so that `exports * from ...` also works
   const output = await build({
     entryPoints: [fullPath],
     bundle: true,
@@ -43,7 +42,6 @@ async function getBundledCommonJsCode(fullPath) {
 }
 
 function getExportedKeyValuePairs(code) {
-  // find the `__export(exports, {...})` part in the commonjs code bundled by esbuild
   const match = /__export\(exports, \{\s+(.*?)\s+\}\);/su.exec(code)
   const text = match?.[1]
   if (!text) throw new Error('Error when parsing esbuild bundle to get exported names')
