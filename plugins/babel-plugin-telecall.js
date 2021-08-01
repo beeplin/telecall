@@ -6,7 +6,7 @@ module.exports = ({ types: t }) => ({
     // eslint-disable-next-line @typescript-eslint/naming-convention
     ImportDeclaration(p, { file, opts }) {
       const targetFullPath = path.resolve(
-        path.dirname(file.opts.sourceFileName),
+        path.dirname(file.opts.filename),
         p.node.source.value,
       )
       if (!isTele(targetFullPath, opts)) return
