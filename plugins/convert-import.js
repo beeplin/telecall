@@ -1,6 +1,4 @@
-module.exports = { convertImport }
-
-function convertImport(code) {
+function parseImport(code) {
   const codeMatch = code
     .trim()
     .replace(/"/gu, "'")
@@ -30,3 +28,14 @@ function convertImport(code) {
     names: [allName, defaultName, ...namedName].filter((i) => i?.local),
   }
 }
+
+function convertImport(code) {
+  const { path, names } = parseImport(code)
+  return names.reduce((acc, { local, imported }) => {
+    return imported === '*'
+      ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return { path: '${path}', name: p }}}); `
+      : `${acc}const ${local} = { path: '${path}', name: '${imported}'}; `
+  }, '')
+}
+
+module.exports = { parseImport, convertImport }
