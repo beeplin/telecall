@@ -1,12 +1,8 @@
-function parseImport(importStatement) {
-  const codeMatch = importStatement
+function parseImportString(string) {
+  const stringMatch = string
+    .replace(/\n/gu, '')
     .trim()
-    .replace(/"/gu, "'")
-    .match(/^import(.*?)from\s*'(.*?)'$/u)
-  if (!codeMatch)
-    throw new Error(`import declaration parsing error: \`${importStatement}\``)
-  const [, string, path] = codeMatch
-  const stringMatch = string.trim().match(/^(.*?)\{(.*?)\}(.*?)$/u)
+    .match(/^(.*?)\{(.*?)\}(.*?)$/u)
   const [, match1, named, match2] = stringMatch ?? [null, string, '', '']
   const unnamed = `${match1} ${match2}`.split(',').map((s) => s.trim())
   const allName = {
@@ -24,27 +20,24 @@ function parseImport(importStatement) {
     const [imported, local = imported] = part.split(' as ').map((n) => n.trim())
     return imported ? { local, imported } : null
   })
-  return {
-    path,
-    names: [allName, defaultName, ...namedName].filter((i) => i?.local),
-  }
+  return [allName, defaultName, ...namedName].filter((i) => i?.local)
 }
 
 function convertImport(code) {
-  // NOT does not work for `import` in strings
+  // NOTE does not work for `import` in strings
   return code.replace(
-    /(\s+)(import\s+.*?)(\s*[\n;])/gsu,
+    /(?<pre>\s+)import(?<string>[\s{].*?[\s}])from\s*(?<quote>['"`])(?<path>.*?)\k<quote>(?<post>\s*[\n;])/gsu,
     // eslint-disable-next-line max-params
-    (_, pre, importStatement, post) => {
-      const { path, names } = parseImport(importStatement)
+    (_, pre, string, __, path, post) => {
+      const names = parseImportString(string)
       const replaced = names.reduce((acc, { local, imported }) => {
         return imported === '*'
           ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return { path: '${path}', name: p }}}); `
-          : `${acc}const ${local} = { path: '${path}', name: '${imported}'}; `
+          : `${acc}const ${local} = { path: '${path}', name: '${imported}' }; `
       }, '')
       return pre + replaced + post
     },
   )
 }
 
-module.exports = { parseImport, convertImport }
+module.exports = { parseImportString, convertImport }
