@@ -31,7 +31,9 @@
     "url": "https://github.com/beeplin/telecall/issues"
   },
   "homepage": "https://github.com/beeplin/telecall#readme",
-  "dependencies": {},
+  "dependencies": {
+    "acorn": "^8.4.1"
+  },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
