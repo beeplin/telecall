@@ -1,5 +1,5 @@
 import mod2, { fn1 as fn1_2 } from '../../server/src/folder/module2.tele'
-import mod1, { fn1 } from '../../server/src/module1.tele'
+import mod1, { fn1, fn21, fn23 } from '../../server/src/module1.tele'
 import { client } from './client'
 import { fn3 } from './module3'
 
@@ -11,6 +11,8 @@ if (app)
     client.call(fn1),
     client.call(mod2, 1),
     client.call(fn1_2),
+    client.call(fn23),
+    client.call(fn21),
     fn3(),
   ])
     .then((results) => {

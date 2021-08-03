@@ -8,10 +8,13 @@ export default defineConfig({
     emptyOutDir: true,
   },
   plugins: [
-    telecall({
-      include: '../server/src/**/*.tele(.ts|.js|)',
-      root: '../server/',
-    }),
+    {
+      ...telecall({
+        include: '../server/src/**/*.tele(.ts|.js|)',
+        root: '../server/',
+      }),
+      enforce: 'pre',
+    },
     vue(),
   ],
 })
