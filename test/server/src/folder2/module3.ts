@@ -17,7 +17,7 @@ export * as abc from './c'
 export { f3, f4 as ff4 }
 
 function f3() {
-  return '------'
+  return process.cwd()
 }
 
 function f4() {}

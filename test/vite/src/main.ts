@@ -1,5 +1,6 @@
 import mod2, { fn1 as fn1_2 } from '../../server/src/folder/module2.tele'
-import mod1, { fn1, fn21, fn23 } from '../../server/src/module1.tele'
+import mod1, { aa, bbb, fn1, fn21, fn23 } from '../../server/src/module1.tele'
+
 import { client } from './client'
 import { fn3 } from './module3'
 
@@ -13,6 +14,8 @@ if (app)
     client.call(fn1_2),
     client.call(fn23),
     client.call(fn21),
+    client.call(aa),
+    client.call(bbb),
     fn3(),
   ])
     .then((results) => {
@@ -21,3 +24,5 @@ if (app)
     .catch((error) => {
       app.innerHTML = String(error)
     })
+
+throw new Error('aaa')

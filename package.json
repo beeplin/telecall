@@ -31,21 +31,18 @@
     "url": "https://github.com/beeplin/telecall/issues"
   },
   "homepage": "https://github.com/beeplin/telecall#readme",
-  "dependencies": {
-    "acorn": "^8.4.1"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@babel/template": "^7.14.5",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@rollup/pluginutils": "^4.1.1",
-    "@types/debug": "^4.1.7",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.3.0",
     "@typescript-eslint/parser": "^4.28.4",
-    "debug": "^4.3.2",
     "esbuild": "^0.12.15",
     "esbuild-jest": "^0.5.0",
-    "eslint": "^7.30.0",
+    "eslint": "^7.32.0",
     "eslint-config-mania": "^0.1.2",
     "husky": "^7.0.1",
     "jest": "^27.0.6",
