@@ -1,3 +1,5 @@
+import path from 'path'
+
 export const a = 1
 
 export async function f1() {}
@@ -21,3 +23,5 @@ function f3() {
 function f4() {}
 
 export default f3
+
+console.log(path)
