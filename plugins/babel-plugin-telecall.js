@@ -4,7 +4,6 @@ const { createFilter, normalizePath } = require('@rollup/pluginutils')
 
 module.exports = () => ({
   visitor: {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     ImportDeclaration(p, { file, opts }) {
       const isTelecall = createFilter(opts.include, opts.exclude)
       const targetFullPath = path.resolve(
