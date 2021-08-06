@@ -1,5 +1,5 @@
 {
-  "include": ["plugins", "src", "*.js", ".*.js"],
+  "include": ["plugins", "src", "spike", "*.js", ".*.js"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
