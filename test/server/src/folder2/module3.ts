@@ -1,4 +1,9 @@
-import path from 'path'
+import call from '../../../../src/call'
+import { setContext } from '../../../server1/src/context'
+import { api1 } from '../../../server1/src/some.api'
+import { getContext } from '../context'
+
+setContext({ server: 'server1' })
 
 export const a = 1
 
@@ -6,7 +11,9 @@ export async function f1() {}
 
 export function f2() {}
 
-export class C1 {}
+export class C1 {
+  a = 1
+}
 
 export * from './a'
 
@@ -17,11 +24,14 @@ export * as abc from './c'
 export { f3, f4 as ff4 }
 
 function f3() {
-  return process.cwd()
+  const ctx = getContext()
+  return { ctx, cwd: process.cwd() }
 }
 
-function f4() {}
+async function f4() {
+  const ctx = getContext()
+  const res = await call(api1, 4)
+  return { ctx, res, from: 'ff4' }
+}
 
 export default f3
-
-console.log(path)

@@ -10,8 +10,10 @@ export default defineConfig({
   plugins: [
     {
       ...telecall({
-        include: '../server/src/**/*.tele(.ts|.js|)',
-        root: '../server/',
+        include: '../server/src/**/*.api.(ts|js)',
+        root: '../server/src',
+        endpoint: 'http://localhost:4000/api',
+        persistence: 'localStorage',
       }),
       enforce: 'pre',
     },

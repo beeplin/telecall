@@ -4,8 +4,8 @@ import { handleUniCall } from '../../../src/server'
 import type { Fn, UniCallRequest } from '../../../src/types'
 import { runWithContext } from './context'
 
-const NAME = 'server'
-const PORT = 4000
+const NAME = 'server1'
+const PORT = 4100
 const ERROR = 500
 
 const app = express()
@@ -20,8 +20,6 @@ app.post('/api', (req, res) => {
       .catch((error) => res.status(ERROR).json(error))
   })
 })
-
-app.use(express.static('./public'))
 
 app.listen(PORT, () => {
   console.info(`${NAME} started on port ${PORT}`)

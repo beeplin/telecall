@@ -1,9 +1,11 @@
+const path = require('path')
+
 module.exports = {
   root: true,
   env: { node: true },
-  extends: ['mania', 'mania/no-type-aware'],
+  extends: ['mania'],
   parserOptions: {
-    project: './test/vue/tsconfig.json',
+    project: path.join(__dirname, './tsconfig.json'),
   },
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'off',

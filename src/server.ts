@@ -1,9 +1,8 @@
-import { join } from 'path'
 import type {
   Fn,
-  TeleRequest,
-  TeleResponse,
-  TeleResponseError,
+  UniCallRequest,
+  UniCallResponse,
+  UniCallResponseError,
   UnPromise,
 } from './types'
 
@@ -17,26 +16,36 @@ const JSON_RPC_METHOD_NOT_FOUND = -32601
 
 interface ReturnValue<T extends Fn> {
   status: number
-  json: TeleResponse<T>
+  json: UniCallResponse<T>
 }
 
-export async function handleTeleRequest<T extends Fn>(
-  request: TeleRequest<T>,
-  ctx: unknown,
-): Promise<{ status: number; json: TeleResponse<T> }> {
-  const [fn, errorValue] = getFn<T>(request)
+// export function uniCallExpressMiddleware(context: unknown) {
+//   return (req, res) => {
+//     runWithContext(context, () => {
+//       handleUniCall(req.body as UniCallRequest<Fn>)
+//         .then(({ status, json }) => res.status(status).json(json))
+//         .catch((error) => res.status(ERROR).json(error))
+//     })
+//   }
+// }
+
+export async function handleUniCall<T extends Fn>(
+  request: UniCallRequest<T>,
+  root: string,
+): Promise<{ status: number; json: UniCallResponse<T> }> {
+  const [fn, errorValue] = getFn<T>(request, root)
   if (errorValue) return errorValue
   const { jsonrpc, params, id } = request
   try {
     // @ts-expect-error 2721 2488
-    const result = (await fn(ctx, ...params)) as UnPromise<ReturnType<T>>
+    const result = (await fn(...params)) as UnPromise<ReturnType<T>>
     return { status: HTTP_OK, json: { jsonrpc, id, result } }
   } catch (error: unknown) {
     const {
       code = 0,
       message = 'Unknown error',
       data = JSON.stringify(error),
-    } = error as TeleResponseError
+    } = error as UniCallResponseError
     return {
       status: HTTP_BAD_REQUEST,
       json: { jsonrpc, id, error: { code, message, data } },
@@ -45,17 +54,17 @@ export async function handleTeleRequest<T extends Fn>(
 }
 
 function getFn<T extends Fn>(
-  request: TeleRequest<T> | null,
+  request: UniCallRequest<T> | null,
+  root: string,
 ): [null, ReturnValue<T>] | [T, null] {
   if (!request) return [null, parseError()]
   const { jsonrpc, method, id } = request
   if (jsonrpc !== '2.0' || typeof method !== 'string' || id === undefined)
     return [null, invalidRequest()]
   const [path, name = 'default'] = method.split('//')
-  const location = join(process.cwd(), path)
   try {
     // eslint-disable-next-line
-    const fn = require(location)[name] as T
+    const fn = require(require('path').join(root, path))[name] as T
     return [fn, null]
   } catch (error: unknown) {
     return [null, methodNotFound(request)]
@@ -84,7 +93,7 @@ function invalidRequest() {
   }
 }
 
-function methodNotFound<T extends Fn>({ jsonrpc, method, id }: TeleRequest<T>) {
+function methodNotFound<T extends Fn>({ jsonrpc, method, id }: UniCallRequest<T>) {
   return {
     status: HTTP_NOT_FOUND,
     json: {

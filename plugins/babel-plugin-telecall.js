@@ -11,16 +11,16 @@ module.exports = () => ({
         p.node.source.value,
       )
       if (!isTelecall(targetFullPath)) return
-      const targetPath = getRelativePath(targetFullPath, opts.root)
-      const consts = convertImportNodeToConstsString(p.node, targetPath)
+      const targetPath = getRelativePath(targetFullPath, opts)
+      const consts = convertImportNodeToConstsString(p.node, targetPath, opts)
       p.replaceWithMultiple(template.statements.ast(consts))
     },
   },
 })
 
-function convertImportNodeToConstsString(node, targetPath) {
+function convertImportNodeToConstsString(node, targetPath, opts) {
   const names = getNamesFromEstreeNode(node)
-  const consts = buildConstsFromNamesAndPath(names, targetPath)
+  const consts = buildConstsFromNamesAndPath(names, targetPath, opts)
   return consts
 }
 
@@ -36,16 +36,16 @@ function getNamesFromEstreeNode(node) {
   }))
 }
 
-function buildConstsFromNamesAndPath(names, targetPath) {
+function buildConstsFromNamesAndPath(names, targetPath, opts) {
   return names.reduce((acc, { local, imported }) => {
     return imported === '*'
       ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return { path: '${targetPath}', name: p }}}); `
-      : `${acc}const ${local} = { path: '${targetPath}', name: '${imported}' }; `
+      : `${acc}const ${local} = { endpoint: '${opts.endpoint}', path: '${targetPath}', name: '${imported}', persistence: '${opts.persistence}' }; `
   }, '')
 }
 
-function getRelativePath(absPath, root) {
-  return normalizePath(path.relative(root, path.relative(process.cwd(), absPath)))
+function getRelativePath(absPath, opts) {
+  return normalizePath(path.relative(opts.root, path.relative(process.cwd(), absPath)))
 }
 
 // function convertImportsCodeToConstsStringByRegex_UNSAFE(code) {

@@ -12,22 +12,29 @@ export interface Client {
   call: <T extends Fn>(fn: T, ...params: RestParams<T>) => PromiseReturnType<T>
 }
 
-export interface TeleRequest<T extends Fn> {
+export interface UniCallInfo {
+  endpoint: string
+  path: string
+  name: string
+  persistence?: 'cookie' | 'localStorage'
+}
+
+export interface UniCallRequest<T extends Fn> {
   jsonrpc: '2.0'
   method: string
-  params?: RestParams<T>
+  params?: Parameters<T>
   id: number | string
 }
 
-export interface TeleResponseError {
+export interface UniCallResponseError {
   code: number
   message: string
   data?: unknown
 }
 
-export interface TeleResponse<T extends Fn> {
+export interface UniCallResponse<T extends Fn> {
   jsonrpc: '2.0'
   result?: UnPromise<ReturnType<T>>
-  error?: TeleResponseError
+  error?: UniCallResponseError
   id: number | string | null
 }

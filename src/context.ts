@@ -3,19 +3,20 @@ import { AsyncLocalStorage } from 'async_hooks'
 export class Context<T> {
   private als = new AsyncLocalStorage<{ context: T }>()
 
-  private test: T | undefined
+  private fake: T | undefined
 
   set(value: T): void {
     const store = this.als.getStore()
     if (store) store.context = value
-    else this.test = value
+    else this.fake = value
   }
 
   get(): T {
-    return this.test ?? (this.als.getStore()?.context as T)
+    return this.als.getStore()?.context ?? (this.fake as T)
   }
 
-  run(value: T, fn: (...params: any[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  run(value: T, fn: (...params: any[]) => any): void {
     this.als.run({ context: value }, fn)
   }
 }

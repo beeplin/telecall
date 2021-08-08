@@ -1,11 +1,9 @@
-import { Context } from './index'
+import { Context } from '../context'
 
 const ctx = new Context<{ value: number }>()
 
-// ctx.setTest(123)
-
-describe('name of the group', () => {
-  it('should 1', async () => {
+describe('context', () => {
+  it('makes different contexts in ctx.run()', async () => {
     const res = await Promise.all(
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => {
         return new Promise<number>((resolve) => {
@@ -22,7 +20,7 @@ describe('name of the group', () => {
     expect(res).toStrictEqual([11, 12, 13, 14, 15, 16, 17, 18, 19, 10])
   })
 
-  it('should 2', async () => {
+  it('makes shared context out of ctx.run()', async () => {
     const res = await Promise.all(
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => {
         return new Promise<number>((resolve) => {
