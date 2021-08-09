@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --build --clean && tsc --build",
-    "test": "jest --passWithNoTests",
+    "test": "jest src --passWithNoTests",
     "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx,.vue --ignore-path .gitignore .",
     "format": "prettier --write --ignore-path .gitignore .",
     "prepare": "husky install",

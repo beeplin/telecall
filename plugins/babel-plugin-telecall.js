@@ -5,22 +5,33 @@ const { createFilter, normalizePath } = require('@rollup/pluginutils')
 module.exports = () => ({
   visitor: {
     ImportDeclaration(p, { file, opts }) {
-      const isTelecall = createFilter(opts.include, opts.exclude)
       const targetFullPath = path.resolve(
         path.dirname(file.opts.filename),
         p.node.source.value,
       )
-      if (!isTelecall(targetFullPath)) return
-      const targetPath = getRelativePath(targetFullPath, opts)
-      const consts = convertImportNodeToConstsString(p.node, targetPath, opts)
+      const targetName = Object.keys(opts).find((name) => {
+        const { include, exclude } = opts[name]
+        const isTelecall = createFilter(include, exclude)
+        return isTelecall(targetFullPath)
+      })
+      if (!targetName) return
+      const { root, endpoint, persistence } = opts[targetName]
+      const targetPath = getRelativePath(targetFullPath, root)
+      const consts = convertImportNodeToConstsString(
+        p.node,
+        targetPath,
+        endpoint,
+        persistence,
+      )
       p.replaceWithMultiple(template.statements.ast(consts))
     },
   },
 })
 
-function convertImportNodeToConstsString(node, targetPath, opts) {
+// eslint-disable-next-line max-params
+function convertImportNodeToConstsString(node, targetPath, endpoint, persistence) {
   const names = getNamesFromEstreeNode(node)
-  const consts = buildConstsFromNamesAndPath(names, targetPath, opts)
+  const consts = buildConstsFromNamesAndPath(names, targetPath, endpoint, persistence)
   return consts
 }
 
@@ -36,16 +47,17 @@ function getNamesFromEstreeNode(node) {
   }))
 }
 
-function buildConstsFromNamesAndPath(names, targetPath, opts) {
+// eslint-disable-next-line max-params
+function buildConstsFromNamesAndPath(names, targetPath, endpoint, persistence) {
   return names.reduce((acc, { local, imported }) => {
     return imported === '*'
       ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return { path: '${targetPath}', name: p }}}); `
-      : `${acc}const ${local} = { endpoint: '${opts.endpoint}', path: '${targetPath}', name: '${imported}', persistence: '${opts.persistence}' }; `
+      : `${acc}const ${local} = { endpoint: '${endpoint}', path: '${targetPath}', name: '${imported}', persistence: '${persistence}' }; `
   }, '')
 }
 
-function getRelativePath(absPath, opts) {
-  return normalizePath(path.relative(opts.root, path.relative(process.cwd(), absPath)))
+function getRelativePath(absPath, root) {
+  return normalizePath(path.relative(root, path.relative(process.cwd(), absPath)))
 }
 
 // function convertImportsCodeToConstsStringByRegex_UNSAFE(code) {

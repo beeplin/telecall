@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev src",
+    "dev": "ts-node-dev src",
     "build": "rm -rf dist && babel src --out-dir dist --copy-files --extensions .ts",
+    "start": "node dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
     "@babel/preset-typescript": "^7.15.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",

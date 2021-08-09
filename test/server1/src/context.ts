@@ -1,4 +1,4 @@
-import { Context } from '../../../src/context'
+import { Context } from '../../../dist/context'
 
 const context = new Context<{ server: string }>()
 

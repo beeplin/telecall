@@ -1,4 +1,4 @@
-import call from '../../../../src/call'
+import call from '../../../../dist/call'
 import { api2 } from '../../../server2/src/any.api'
 import { getContext } from '../context'
 

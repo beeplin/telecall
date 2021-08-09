@@ -1,9 +1,6 @@
-import call from '../../../../src/call'
-import { setContext } from '../../../server1/src/context'
+import call from '../../../../dist/call'
 import { api1 } from '../../../server1/src/some.api'
 import { getContext } from '../context'
-
-setContext({ server: 'server1' })
 
 export const a = 1
 

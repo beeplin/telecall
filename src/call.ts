@@ -51,7 +51,8 @@ function buildHeadersByPersistedToken(info: UniCallInfo) {
   const headers = new Headers({ 'content-type': 'application/json' })
   if (info.persistence === 'localStorage') {
     const tokenName = getTokenName(info)
-    const token = localStorage?.getItem(tokenName) ?? memoryStorage[tokenName] ?? '' // TODO cookie fetch
+    const token =
+      globalThis.localStorage?.getItem(tokenName) ?? memoryStorage[tokenName] ?? '' // TODO cookie fetch
     headers.set('authorization', token)
   }
   return headers
@@ -62,7 +63,7 @@ function persistTokenFromResponseHeaders(headers: Headers, info: UniCallInfo) {
     const token = headers.get('authorization')
     if (token != null) {
       const tokenName = getTokenName(info)
-      if (localStorage) localStorage.setItem(tokenName, token)
+      if (globalThis.localStorage) localStorage.setItem(tokenName, token)
       else memoryStorage[tokenName] = token
     }
   }
