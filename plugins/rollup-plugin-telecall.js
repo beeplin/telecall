@@ -31,18 +31,27 @@ export default function telecall(opts) {
     transform(code, id) {
       const [filePath, targetName] = id.split(SEP)
       if (!targetName) return null
-      const { endpoint, persistence } = opts[targetName]
-      return convertTsToExportsByTsAst(filePath, code, endpoint, persistence)
+      const { endpoint, sessionTokenPersistence } = opts[targetName]
+      return convertTsToExportsByTsAst(
+        filePath,
+        code,
+        endpoint,
+        sessionTokenPersistence,
+      )
     },
   }
 }
 
 // eslint-disable-next-line max-params
-function convertTsToExportsByTsAst(filePath, code, endpoint, persistence) {
+function convertTsToExportsByTsAst(filePath, code, endpoint, sessionTokenPersistence) {
   const ast = getTsAst(filePath, code, ScriptTarget.Latest)
   const allExports = getAllExportsFromTsAstAndCode(ast, code)
   const methods = getExportedNamesFromTsAst(ast)
-  const namedExports = convertMethodsToNamedExports(methods, endpoint, persistence)
+  const namedExports = convertMethodsToNamedExports(
+    methods,
+    endpoint,
+    sessionTokenPersistence,
+  )
   return namedExports + allExports
 }
 
@@ -67,9 +76,11 @@ function getExportedNamesFromTsAst(ast) {
   )
 }
 
-function convertMethodsToNamedExports(methods, endpoint, persistence) {
+function convertMethodsToNamedExports(methods, endpoint, sessionTokenPersistence) {
   const part = `endpoint: '${endpoint}'${
-    persistence ? `, persistence: '${persistence}'` : ''
+    sessionTokenPersistence
+      ? `, sessionTokenPersistence: '${sessionTokenPersistence}'`
+      : ''
   }`
   return methods.reduce((acc, method) => {
     const prefix = method === 'default' ? 'default' : `const ${method} =`

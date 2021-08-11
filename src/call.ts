@@ -22,7 +22,7 @@ async function call<T extends Fn>(
 ): PromiseReturnType<T> {
   if (typeof fn === 'function') return fn(...params)
   nextId()
-  const { endpoint, method, persistence } = fn
+  const { endpoint, method, sessionTokenPersistence } = fn
   const request: TeleRequest<T> = {
     jsonrpc: '2.0',
     method,
@@ -31,10 +31,14 @@ async function call<T extends Fn>(
   }
   const rawResponse = await fetch(endpoint, {
     method: 'POST',
-    headers: buildHeadersByPersistedToken(endpoint, persistence),
+    headers: buildHeadersByPersistedToken(endpoint, sessionTokenPersistence),
     body: JSON.stringify(request),
   })
-  persistTokenFromResponseHeaders(rawResponse.headers, endpoint, persistence)
+  persistTokenFromResponseHeaders(
+    rawResponse.headers,
+    endpoint,
+    sessionTokenPersistence,
+  )
   const response = (await rawResponse.json()) as TeleResponse<T>
   handleErrors(response, request)
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -47,9 +51,12 @@ function nextId() {
 
 const memoryStorage: Record<string, string> = {}
 
-function buildHeadersByPersistedToken(endpoint: string, persistence?: string) {
+function buildHeadersByPersistedToken(
+  endpoint: string,
+  sessionTokenPersistence?: string,
+) {
   const headers = new Headers({ 'content-type': 'application/json' })
-  if (!persistence || persistence === 'localStorage') {
+  if (!sessionTokenPersistence || sessionTokenPersistence === 'localStorage') {
     const tokenName = getTokenName(endpoint)
     const token =
       globalThis.localStorage?.getItem(tokenName) ?? memoryStorage[tokenName] ?? '' // TODO cookie fetch
@@ -61,9 +68,9 @@ function buildHeadersByPersistedToken(endpoint: string, persistence?: string) {
 function persistTokenFromResponseHeaders(
   headers: Headers,
   endpoint: string,
-  persistence?: string,
+  sessionTokenPersistence?: string,
 ) {
-  if (!persistence || persistence === 'localStorage') {
+  if (!sessionTokenPersistence || sessionTokenPersistence === 'localStorage') {
     const token = headers.get('authorization')
     if (token != null) {
       const tokenName = getTokenName(endpoint)

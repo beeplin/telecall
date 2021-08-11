@@ -15,7 +15,7 @@ export interface Client {
 export interface TeleInfo {
   endpoint: string
   method: string
-  persistence?: 'cookie' | 'localStorage'
+  sessionTokenPersistence?: 'cookie' | 'localStorage'
 }
 
 export interface TeleRequest<T extends Fn> {

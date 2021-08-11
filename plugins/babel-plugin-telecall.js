@@ -39,9 +39,11 @@ function getNamesFromEstreeNode(node) {
 }
 
 function buildConstsFromNamesAndPath(names, opt) {
-  const { endpoint, persistence } = opt
+  const { endpoint, sessionTokenPersistence } = opt
   const part = `endpoint: '${endpoint}'${
-    persistence ? `, persistence: '${persistence}'` : ''
+    sessionTokenPersistence
+      ? `, sessionTokenPersistence: '${sessionTokenPersistence}'`
+      : ''
   }`
   return names.reduce((acc, { local, imported }) => {
     return imported === '*'
