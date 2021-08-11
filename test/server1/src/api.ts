@@ -1,5 +1,5 @@
 import call from '../../../dist/call'
-import { api1 as api12, api2 as api22 } from '../../server2/src/any.api'
+import { api1 as api12, api2 as api22 } from '../../server2/src/api'
 import { getContext } from './context'
 
 export async function api1(input: number) {
@@ -10,7 +10,6 @@ export async function api1(input: number) {
 
 export async function api2(input: string) {
   const ctx = getContext()
-  console.log('🚀 ~ file: some.api.ts ~ line 14 ~ api2 ~ ctx', ctx)
   const res = await call(api22, 'input', 2)
   return { ...ctx, input, res }
 }

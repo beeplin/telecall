@@ -1,7 +1,7 @@
 import call from '../../../src/call'
-import mod from '../../server/src/module1.api'
+import { fn2 } from '../../server/src/api'
 
 export async function fn3() {
-  const res = await call(mod, 'from m3')
+  const res = await call(fn2, -1)
   return res
 }

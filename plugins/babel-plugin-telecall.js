@@ -1,37 +1,28 @@
 const path = require('path')
 const template = require('@babel/template')
-const { createFilter, normalizePath } = require('@rollup/pluginutils')
 
 module.exports = () => ({
   visitor: {
     ImportDeclaration(p, { file, opts }) {
-      const targetFullPath = path.resolve(
-        path.dirname(file.opts.filename),
-        p.node.source.value,
-      )
+      const targetFullPath = path
+        .resolve(path.dirname(file.opts.filename), p.node.source.value)
+        .replace(/\\/gu, '/')
       const targetName = Object.keys(opts).find((name) => {
-        const { include, exclude } = opts[name]
-        const isTelecall = createFilter(include, exclude)
-        return isTelecall(targetFullPath)
+        const { targetPath } = opts[name]
+        const absPath = path.resolve(process.cwd(), targetPath).replace(/\\/gu, '/')
+        return targetFullPath.startsWith(absPath)
       })
       if (!targetName) return
-      const { root, endpoint, persistence } = opts[targetName]
-      const targetPath = getRelativePath(targetFullPath, root)
-      const consts = convertImportNodeToConstsString(
-        p.node,
-        targetPath,
-        endpoint,
-        persistence,
-      )
+      const opt = opts[targetName]
+      const consts = convertImportNodeToConstsString(p.node, opt)
       p.replaceWithMultiple(template.statements.ast(consts))
     },
   },
 })
 
-// eslint-disable-next-line max-params
-function convertImportNodeToConstsString(node, targetPath, endpoint, persistence) {
+function convertImportNodeToConstsString(node, opt) {
   const names = getNamesFromEstreeNode(node)
-  const consts = buildConstsFromNamesAndPath(names, targetPath, endpoint, persistence)
+  const consts = buildConstsFromNamesAndPath(names, opt)
   return consts
 }
 
@@ -47,18 +38,21 @@ function getNamesFromEstreeNode(node) {
   }))
 }
 
-// eslint-disable-next-line max-params
-function buildConstsFromNamesAndPath(names, targetPath, endpoint, persistence) {
+function buildConstsFromNamesAndPath(names, opt) {
+  const { endpoint, persistence } = opt
+  const part = `endpoint: '${endpoint}'${
+    persistence ? `, persistence: '${persistence}'` : ''
+  }`
   return names.reduce((acc, { local, imported }) => {
     return imported === '*'
-      ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return { path: '${targetPath}', name: p }}}); `
-      : `${acc}const ${local} = { endpoint: '${endpoint}', path: '${targetPath}', name: '${imported}', persistence: '${persistence}' }; `
+      ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return { ${part}, method: p }}}); `
+      : `${acc}const ${local} = { ${part}, method: '${imported}' }; `
   }, '')
 }
 
-function getRelativePath(absPath, root) {
-  return normalizePath(path.relative(root, path.relative(process.cwd(), absPath)))
-}
+// function getRelativePath(absPath, root) {
+//   return normalizePath(path.relative(root, path.relative(process.cwd(), absPath)))
+// }
 
 // function convertImportsCodeToConstsStringByRegex_UNSAFE(code) {
 //   // NOTE does not work for `import` in strings

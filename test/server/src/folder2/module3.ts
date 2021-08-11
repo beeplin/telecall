@@ -1,23 +1,16 @@
 import call from '../../../../dist/call'
-import { api1 } from '../../../server1/src/some.api'
+import { api1 } from '../../../server1/src/api'
 import { getContext } from '../context'
-
-export const a = 1
 
 export async function f1() {}
 
 export function f2() {}
 
-export class C1 {
-  a = 1
-}
-
 export * from './a'
 
 export { a as aa, b as bb } from './b'
 
-export * as abc from './c'
-
+// export * as abc from './c'
 export { f3, f4 as ff4 }
 
 function f3() {

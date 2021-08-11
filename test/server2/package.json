@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev src",
-    "build": "rm -rf dist && babel src --out-dir dist --copy-files --extensions .ts",
+    "build": "rm -rf dist && babel src --out-dir dist --copy-files --extensions .ts --source-maps",
     "start": "node dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

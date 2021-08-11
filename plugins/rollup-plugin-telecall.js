@@ -1,32 +1,25 @@
-import { createFilter, normalizePath } from '@rollup/pluginutils'
-import { relative } from 'path'
+import { resolve } from 'path'
 import { createSourceFile as getTsAst, ScriptTarget, SyntaxKind as K } from 'typescript'
 
-const SEP = '?telecall:'
+const SEP = '?telecall='
 
 export default function telecall(opts) {
   return {
     name: 'telecall',
 
     async resolveId(source, importer) {
-      const [importerPath, targetPath, _targetName] = importer?.split(SEP) ?? ''
+      const [importerPath, _targetName] = importer?.split(SEP) ?? ''
       const resolved = await this.resolve(source, importerPath, { skipSelf: true })
       const id = resolved?.id
       const targetName =
         _targetName ??
         Object.keys(opts).find((name) => {
-          const { include, exclude } = opts[name]
-          const isTelecall = createFilter(include, exclude)
-          return isTelecall(id)
+          const { targetPath } = opts[name]
+          const absPath = resolve(process.cwd(), targetPath).replace(/\\/gu, '/')
+          return id.startsWith(absPath)
         })
-      if (!targetPath && !targetName) return id
-      return (
-        id +
-        SEP +
-        (targetPath ?? getRelativePath(id, opts[targetName].root)) +
-        SEP +
-        targetName
-      )
+      const result = targetName ? id + SEP + targetName : id
+      return result
     },
 
     // async load(id) {
@@ -36,31 +29,20 @@ export default function telecall(opts) {
     // },
 
     transform(code, id) {
-      const [filePath, targetPath, targetName] = id.split(SEP)
-      if (!targetPath) return null
+      const [filePath, targetName] = id.split(SEP)
+      if (!targetName) return null
       const { endpoint, persistence } = opts[targetName]
-      return convertTsToExportsByTsAst(
-        filePath,
-        code,
-        targetPath,
-        endpoint,
-        persistence,
-      )
+      return convertTsToExportsByTsAst(filePath, code, endpoint, persistence)
     },
   }
 }
 
 // eslint-disable-next-line max-params
-function convertTsToExportsByTsAst(filePath, code, targetPath, endpoint, persistence) {
+function convertTsToExportsByTsAst(filePath, code, endpoint, persistence) {
   const ast = getTsAst(filePath, code, ScriptTarget.Latest)
   const allExports = getAllExportsFromTsAstAndCode(ast, code)
-  const names = getExportedNamesFromTsAst(ast)
-  const namedExports = convertNamesToNamedExports(
-    names,
-    targetPath,
-    endpoint,
-    persistence,
-  )
+  const methods = getExportedNamesFromTsAst(ast)
+  const namedExports = convertMethodsToNamedExports(methods, endpoint, persistence)
   return namedExports + allExports
 }
 
@@ -85,26 +67,21 @@ function getExportedNamesFromTsAst(ast) {
   )
 }
 
-// eslint-disable-next-line max-params
-function convertNamesToNamedExports(names, targetPath, endpoint, persistence) {
-  return names.reduce((acc, name) => {
-    const prefix = name === 'default' ? 'default' : `const ${name} =`
-    return `${acc}
-      export ${prefix} {  
-        endpoint: '${endpoint}', 
-        path: '${targetPath}', 
-        name: '${name}', 
-        persistence: '${persistence}' 
-      };
-    `
+function convertMethodsToNamedExports(methods, endpoint, persistence) {
+  const part = `endpoint: '${endpoint}'${
+    persistence ? `, persistence: '${persistence}'` : ''
+  }`
+  return methods.reduce((acc, method) => {
+    const prefix = method === 'default' ? 'default' : `const ${method} =`
+    return `${acc}export ${prefix} { ${part}, method: '${method}' };\n`
   }, '')
 }
 
-function getRelativePath(absPath, root) {
-  return normalizePath(
-    relative(root, relative(process.cwd(), absPath.replace(/\.ts$/, '.js'))),
-  )
-}
+// function getRelativePath(absPath, root) {
+//   return normalizePath(
+//     relative(root, relative(process.cwd(), absPath.replace(/\.ts$/u, '.js'))),
+//   )
+// }
 
 // async function convertTsToExportsByEsbuildAndRegex_SLOW_UNSAFE(fullPath, telecallPath) {
 //   const code = await getBundledCommonJsCodeByEsbuild(fullPath)

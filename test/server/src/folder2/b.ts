@@ -1,5 +1,5 @@
 import call from '../../../../dist/call'
-import { api2 } from '../../../server2/src/any.api'
+import { api2 } from '../../../server2/src/api'
 import { getContext } from '../context'
 
 export function b() {}

@@ -14,8 +14,7 @@ export interface Client {
 
 export interface UniCallInfo {
   endpoint: string
-  path: string
-  name: string
+  method: string
   persistence?: 'cookie' | 'localStorage'
 }
 

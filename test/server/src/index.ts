@@ -1,12 +1,17 @@
+/* eslint-disable import/no-namespace */
 import cors from 'cors'
 import express from 'express'
 import { handleUniCall } from '../../../dist/server'
 import type { Fn, UniCallRequest } from '../../../dist/types'
+import * as api from './api'
 import { runWithContext } from './context'
 
 const NAME = 'server'
 const PORT = 4000
-const ERROR = 500
+
+const HTTP_OK = 200
+const HTTP_BAD_REQUEST = 400
+const HTTP_INTERNAL_SERVER_ERROR = 500
 
 const app = express()
 
@@ -15,14 +20,14 @@ app.use(express.json())
 
 app.post('/api', (req, res) => {
   runWithContext({ server: NAME }, () => {
-    handleUniCall(req.body as UniCallRequest<Fn>, __dirname)
-      .then(({ status, json }) => {
+    handleUniCall(req.body as UniCallRequest<Fn>, api)
+      .then((json) => {
         console.info(json)
-        res.status(status).json(json)
+        res.status(json.error ? HTTP_BAD_REQUEST : HTTP_OK).json(json)
       })
       .catch((error) => {
         console.error(error)
-        res.status(ERROR).json(error)
+        res.status(HTTP_INTERNAL_SERVER_ERROR).json(error)
       })
   })
 })

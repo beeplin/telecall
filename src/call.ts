@@ -22,19 +22,19 @@ async function call<T extends Fn>(
 ): PromiseReturnType<T> {
   if (typeof fn === 'function') return fn(...params)
   nextId()
-  const info = fn
+  const { endpoint, method, persistence } = fn
   const request: UniCallRequest<T> = {
     jsonrpc: '2.0',
-    method: `${info.path}//${info.name}`,
+    method,
     params,
     id: callId,
   }
-  const rawResponse = await fetch(info.endpoint, {
+  const rawResponse = await fetch(endpoint, {
     method: 'POST',
-    headers: buildHeadersByPersistedToken(info),
+    headers: buildHeadersByPersistedToken(endpoint, persistence),
     body: JSON.stringify(request),
   })
-  persistTokenFromResponseHeaders(rawResponse.headers, info)
+  persistTokenFromResponseHeaders(rawResponse.headers, endpoint, persistence)
   const response = (await rawResponse.json()) as UniCallResponse<T>
   handleErrors(response, request)
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -47,10 +47,10 @@ function nextId() {
 
 const memoryStorage: Record<string, string> = {}
 
-function buildHeadersByPersistedToken(info: UniCallInfo) {
+function buildHeadersByPersistedToken(endpoint: string, persistence?: string) {
   const headers = new Headers({ 'content-type': 'application/json' })
-  if (info.persistence === 'localStorage') {
-    const tokenName = getTokenName(info)
+  if (!persistence || persistence === 'localStorage') {
+    const tokenName = getTokenName(endpoint)
     const token =
       globalThis.localStorage?.getItem(tokenName) ?? memoryStorage[tokenName] ?? '' // TODO cookie fetch
     headers.set('authorization', token)
@@ -58,11 +58,15 @@ function buildHeadersByPersistedToken(info: UniCallInfo) {
   return headers
 }
 
-function persistTokenFromResponseHeaders(headers: Headers, info: UniCallInfo) {
-  if (info.persistence === 'localStorage') {
+function persistTokenFromResponseHeaders(
+  headers: Headers,
+  endpoint: string,
+  persistence?: string,
+) {
+  if (!persistence || persistence === 'localStorage') {
     const token = headers.get('authorization')
     if (token != null) {
-      const tokenName = getTokenName(info)
+      const tokenName = getTokenName(endpoint)
       if (globalThis.localStorage) localStorage.setItem(tokenName, token)
       else memoryStorage[tokenName] = token
     }
@@ -81,6 +85,6 @@ function handleErrors<T extends Fn>(
     })
 }
 
-function getTokenName(info: UniCallInfo) {
-  return `sessionToken::${info.endpoint}`
+function getTokenName(endpoint: string) {
+  return `sessionToken::${endpoint}`
 }
