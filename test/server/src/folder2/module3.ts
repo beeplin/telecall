@@ -1,6 +1,6 @@
 import call from '../../../../dist/call'
 import { api1 } from '../../../server1/src/api'
-import { getContext } from '../context'
+import context from '../context'
 
 export async function f1() {}
 
@@ -14,12 +14,12 @@ export { a as aa, b as bb } from './b'
 export { f3, f4 as ff4 }
 
 function f3() {
-  const ctx = getContext()
+  const ctx = context.get()
   return { ctx, cwd: process.cwd() }
 }
 
 async function f4() {
-  const ctx = getContext()
+  const ctx = context.get()
   const res = await call(api1, 4)
   return { ctx, res, from: 'ff4' }
 }

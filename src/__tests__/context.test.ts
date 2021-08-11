@@ -1,16 +1,16 @@
-import { Context } from '../context'
+import { ContextStore } from '../context'
 
-const ctx = new Context<{ value: number }>()
+const context = new ContextStore<{ value: number }>()
 
 describe('context', () => {
   it('makes different contexts in ctx.run()', async () => {
     const res = await Promise.all(
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => {
         return new Promise<number>((resolve) => {
-          ctx.run({ value: i }, () => {
-            ctx.set({ value: i + 10 })
+          context.runWith({ value: i }, () => {
+            context.set({ value: i + 10 })
             setTimeout(() => {
-              resolve(ctx.get().value)
+              resolve(context.get().value)
             }, Math.random() * 1000)
           })
         })
@@ -24,9 +24,9 @@ describe('context', () => {
     const res = await Promise.all(
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => {
         return new Promise<number>((resolve) => {
-          ctx.set({ value: i + 10 })
+          context.set({ value: i + 10 })
           setTimeout(() => {
-            resolve(ctx.get().value)
+            resolve(context.get().value)
           }, Math.random() * 1000)
         })
       }),

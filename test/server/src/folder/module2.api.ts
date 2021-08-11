@@ -1,11 +1,11 @@
-import { getContext } from '../context'
+import context from '../context'
 
 export async function fn11() {
-  const ctx = getContext()
+  const ctx = context.get()
   return `${ctx?.server ?? ''} m2 f1`
 }
 
 export function fn2(input: number) {
-  const ctx = getContext()
+  const ctx = context.get()
   return { ctx, input, from: 'm2 f2' }
 }

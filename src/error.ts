@@ -1,11 +1,11 @@
-import type { Fn, UniCallResponse } from './types'
+import type { Fn, TeleResponse } from './types'
 
-export class UniCallError<T extends Fn> extends Error {
+export class TeleError<T extends Fn> extends Error {
   code: number
 
   data: unknown
 
-  constructor(error: Required<UniCallResponse<T>>['error']) {
+  constructor(error: Required<TeleResponse<T>>['error']) {
     super()
     this.name = 'TeleError'
     this.code = error.code

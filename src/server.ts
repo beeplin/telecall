@@ -1,8 +1,8 @@
 import type {
   Fn,
-  UniCallRequest,
-  UniCallResponse,
-  UniCallResponseError,
+  TeleRequest,
+  TeleResponse,
+  TeleResponseError,
   UnPromise,
 } from './types'
 
@@ -13,17 +13,17 @@ const JSON_RPC_METHOD_NOT_FOUND = -32601
 // export function uniCallExpressMiddleware(context: unknown) {
 //   return (req, res) => {
 //     runWithContext(context, () => {
-//       handleUniCall(req.body as UniCallRequest<Fn>)
+//       execute(req.body as TeleRequest<Fn>)
 //         .then(({ status, json }) => res.status(status).json(json))
 //         .catch((error) => res.status(ERROR).json(error))
 //     })
 //   }
 // }
 
-export async function handleUniCall<T extends Fn>(
-  request: UniCallRequest<T>,
+export async function execute<T extends Fn>(
+  request: TeleRequest<T>,
   api: Record<string, T>,
-): Promise<UniCallResponse<T>> {
+): Promise<TeleResponse<T>> {
   const [fn, errorValue] = getFn<T>(request, api)
   if (errorValue) return errorValue
   const { jsonrpc, params, id } = request
@@ -36,15 +36,15 @@ export async function handleUniCall<T extends Fn>(
       code = 0,
       message = 'Unknown error',
       data = JSON.stringify(error),
-    } = error as UniCallResponseError
+    } = error as TeleResponseError
     return { jsonrpc, id, error: { code, message, data } }
   }
 }
 
 function getFn<T extends Fn>(
-  request: UniCallRequest<T> | null,
+  request: TeleRequest<T> | null,
   api: Record<string, T>,
-): [null, UniCallResponse<T>] | [T, null] {
+): [null, TeleResponse<T>] | [T, null] {
   if (!request) return [null, parseError()]
   const { jsonrpc, method, id } = request
   const isInvalid = jsonrpc !== '2.0' || typeof method !== 'string' || id === undefined
@@ -70,7 +70,7 @@ function invalidRequest() {
   }
 }
 
-function methodNotFound<T extends Fn>({ jsonrpc, method, id }: UniCallRequest<T>) {
+function methodNotFound<T extends Fn>({ jsonrpc, method, id }: TeleRequest<T>) {
   return {
     jsonrpc,
     error: {

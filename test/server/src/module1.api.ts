@@ -1,12 +1,12 @@
-import { getContext } from './context'
+import context from './context'
 
 export function fn1() {
-  const ctx = getContext()
+  const ctx = context.get()
   return { ctx }
 }
 
 async function fn2(input: string) {
-  const ctx = getContext()
+  const ctx = context.get()
   return { ctx, input, from: 'm1 f2' }
 }
 

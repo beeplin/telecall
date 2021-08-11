@@ -1,13 +1,13 @@
 /// <reference lib="dom" />
 
 import 'isomorphic-fetch'
-import { UniCallError } from './error'
+import { TeleError } from './error'
 import type {
   Fn,
   PromiseReturnType,
-  UniCallInfo,
-  UniCallRequest,
-  UniCallResponse,
+  TeleInfo,
+  TeleRequest,
+  TeleResponse,
 } from './types'
 
 const JSON_RPC_INVALID_REQUEST = -32600
@@ -17,13 +17,13 @@ let callId = 0
 export default call
 
 async function call<T extends Fn>(
-  fn: T | UniCallInfo,
+  fn: T | TeleInfo,
   ...params: Parameters<T>
 ): PromiseReturnType<T> {
   if (typeof fn === 'function') return fn(...params)
   nextId()
   const { endpoint, method, persistence } = fn
-  const request: UniCallRequest<T> = {
+  const request: TeleRequest<T> = {
     jsonrpc: '2.0',
     method,
     params,
@@ -35,7 +35,7 @@ async function call<T extends Fn>(
     body: JSON.stringify(request),
   })
   persistTokenFromResponseHeaders(rawResponse.headers, endpoint, persistence)
-  const response = (await rawResponse.json()) as UniCallResponse<T>
+  const response = (await rawResponse.json()) as TeleResponse<T>
   handleErrors(response, request)
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return response.result!
@@ -74,12 +74,12 @@ function persistTokenFromResponseHeaders(
 }
 
 function handleErrors<T extends Fn>(
-  response: UniCallResponse<T>,
-  request: UniCallRequest<T>,
+  response: TeleResponse<T>,
+  request: TeleRequest<T>,
 ) {
-  if (response.error) throw new UniCallError(response.error)
+  if (response.error) throw new TeleError(response.error)
   if (response.jsonrpc !== '2.0' || response.id !== request.id)
-    throw new UniCallError({
+    throw new TeleError({
       code: JSON_RPC_INVALID_REQUEST,
       message: 'Invalid Request',
     })

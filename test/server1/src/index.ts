@@ -1,10 +1,10 @@
 /* eslint-disable import/no-namespace */
 import cors from 'cors'
 import express from 'express'
-import { handleUniCall } from '../../../dist/server'
-import type { Fn, UniCallRequest } from '../../../dist/types'
+import { execute } from '../../../dist/server'
+import type { Fn, TeleRequest } from '../../../dist/types'
 import * as api from './api'
-import { runWithContext } from './context'
+import context from './context'
 
 const NAME = 'server1'
 const PORT = 4100
@@ -19,8 +19,8 @@ app.use(cors())
 app.use(express.json())
 
 app.post('/api', (req, res) => {
-  runWithContext({ server: NAME }, () => {
-    handleUniCall(req.body as UniCallRequest<Fn>, api)
+  context.runWith({ server: NAME }, () => {
+    execute(req.body as TeleRequest<Fn>, api)
       .then((json) => {
         console.info(json)
         res.status(json.error ? HTTP_BAD_REQUEST : HTTP_OK).json(json)
