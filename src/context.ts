@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from 'async_hooks'
+import type { Fn } from './types'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class ContextStore<C extends Record<string, any>> {
@@ -17,8 +18,7 @@ export class ContextStore<C extends Record<string, any>> {
     return this.als.getStore()?.context ?? this.fakeContext
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  runWith(value: C, fn: (...params: any[]) => any): void {
+  runWith(value: C, fn: Fn): void {
     this.als.run({ context: value }, fn)
   }
 }

@@ -20,7 +20,7 @@ const JSON_RPC_METHOD_NOT_FOUND = -32601
 //   }
 // }
 
-export async function execute<T extends Fn>(
+export default async function execute<T extends Fn>(
   request: TeleRequest<T>,
   api: Record<string, T>,
 ): Promise<TeleResponse<T>> {
