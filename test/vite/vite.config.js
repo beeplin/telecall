@@ -11,12 +11,14 @@ export default defineConfig({
     {
       ...telecall({
         server0: {
-          endpoint: 'http://localhost:4000/api',
           targetPath: '../server0/src/api',
+          endpoint: 'http://localhost:4000/api',
+          sessionTokenPersistence: 'cookie',
         },
         server1: {
-          endpoint: 'http://localhost:4100/api',
           targetPath: '../server1/src/api',
+          endpoint: 'http://localhost:4100/api',
+          sessionTokenPersistence: 'cookie',
         },
       }),
       enforce: 'pre',

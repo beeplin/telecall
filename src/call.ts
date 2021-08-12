@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 
-import 'isomorphic-fetch'
+import 'isomorphic-fetch-with-cookie'
 import { TeleError } from './error'
 import type {
   Fn,

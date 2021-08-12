@@ -8,8 +8,9 @@ module.exports = {
       '../../plugins/babel-plugin-telecall.js',
       {
         server2: {
-          endpoint: 'http://localhost:4200/api',
           targetPath: '../server2/src/api',
+          endpoint: 'http://localhost:4200/api',
+          sessionTokenPersistence: 'cookie',
         },
       },
     ],

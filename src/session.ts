@@ -1,4 +1,6 @@
 /* eslint-disable max-classes-per-file */
+import type { CookieSerializeOptions } from 'cookie'
+import cookie from 'cookie'
 import type express from 'express'
 
 export interface IdGenerator {
@@ -35,7 +37,7 @@ export class FakeSession extends Session {
   }
 }
 
-export class ExpressSession extends Session {
+export class ExpressHeaderSession extends Session {
   constructor(
     private readonly req: express.Request,
     private readonly res: express.Response,
@@ -50,5 +52,29 @@ export class ExpressSession extends Session {
   changeId(): void {
     this._id = this.idGenerator.generate()
     this.res.setHeader('authorization', this._id)
+  }
+}
+
+export class ExpressCookieSession extends Session {
+  // eslint-disable-next-line max-params
+  constructor(
+    private readonly req: express.Request,
+    private readonly res: express.Response,
+    private readonly cookieName: string,
+    private readonly cookieOptions: CookieSerializeOptions = { httpOnly: true },
+    private readonly idGenerator: IdGenerator = new FakeIdGenerator(),
+  ) {
+    super()
+    const id = cookie.parse(this.req.headers.cookie ?? '')[this.cookieName]
+    if (id) this._id = id
+    else this.changeId()
+  }
+
+  changeId(): void {
+    this._id = this.idGenerator.generate()
+    this.res.setHeader(
+      'Set-Cookie',
+      cookie.serialize(this.cookieName, this._id, this.cookieOptions),
+    )
   }
 }

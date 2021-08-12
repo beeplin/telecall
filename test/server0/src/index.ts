@@ -1,7 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import tele from '../../../dist/express'
-import { ExpressSession } from '../../../dist/session'
+import { ExpressCookieSession } from '../../../dist/session'
 import * as api from './api'
 import context from './context'
 
@@ -15,7 +15,7 @@ express()
     express.json(),
     tele(api, context, (req, res) => ({
       server: NAME,
-      session: new ExpressSession(req, res),
+      session: new ExpressCookieSession(req, res, `sessionToken::${NAME}`),
     })),
   )
   .use(express.static('./public'))
