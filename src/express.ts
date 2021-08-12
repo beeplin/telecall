@@ -10,10 +10,10 @@ const HTTP_INTERNAL_SERVER_ERROR = 500
 export default function tele<T>(
   api: Record<string, Fn>,
   context: ContextStore<T>,
-  initialContextFn: (req?: express.Request) => T,
+  getInitialContext: (req?: express.Request) => T,
 ): (req: express.Request, res: express.Response) => void {
   return (req, res) => {
-    context.runWith(initialContextFn(req), () => {
+    context.runWith(getInitialContext(req), () => {
       execute(req.body as TeleRequest<Fn>, api)
         .then((json) => {
           console.info(json)

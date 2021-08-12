@@ -5,10 +5,8 @@ module.exports = {
       '../../plugins/babel-plugin-telecall.js',
       {
         server: {
-          include: '../server/src/**/*.api(.ts|.js|)',
-          root: '../server/src',
           endpoint: 'http://localhost:4000/api',
-          persistence: 'localStorage',
+          targetPath: '../server/src/api',
         },
       },
     ],

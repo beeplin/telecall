@@ -1,7 +1,7 @@
 /* eslint-disable import/no-namespace */
 import cors from 'cors'
 import express from 'express'
-import tele from '../../../dist/tele'
+import tele from '../../../dist/express'
 import * as api from './api'
 import context from './context'
 
