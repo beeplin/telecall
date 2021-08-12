@@ -1,12 +1,10 @@
 import { AsyncLocalStorage } from 'async_hooks'
 import type { Fn } from './types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class ContextStore<C extends Record<string, any>> {
+export class ContextStore<C extends Record<string, unknown>> {
   private als = new AsyncLocalStorage<{ context: C }>()
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  private fakeContext = {} as C
+  private fakeContext: C | null = null
 
   set(value: C): void {
     const store = this.als.getStore()
@@ -15,7 +13,10 @@ export class ContextStore<C extends Record<string, any>> {
   }
 
   get(): C {
-    return this.als.getStore()?.context ?? this.fakeContext
+    const context = this.als.getStore()?.context
+    if (context) return context
+    if (this.fakeContext) return this.fakeContext
+    throw new Error('context not been set')
   }
 
   runWith(value: C, fn: Fn): void {

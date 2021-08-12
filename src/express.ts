@@ -7,7 +7,7 @@ const HTTP_OK = 200
 const HTTP_BAD_REQUEST = 400
 const HTTP_INTERNAL_SERVER_ERROR = 500
 
-export default function tele<T>(
+export default function tele<T extends Record<string, unknown>>(
   api: Record<string, Fn>,
   context: ContextStore<T>,
   getInitialContext: (req: express.Request, res: express.Response) => T,
