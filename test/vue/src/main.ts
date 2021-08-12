@@ -1,9 +1,9 @@
-import { getData } from './model'
+import { run } from './model'
 
 const app = document.getElementById('app')
 
-getData()
+run()
   .then((res) => {
-    if (app) app.innerHTML = res
+    if (app) app.innerHTML = `<pre>${JSON.stringify(res, null, 4)}</pre>`
   })
   .catch((e: unknown) => e)

@@ -1,20 +1,24 @@
 import call from '../../../src/call'
-import { aa, bbb, ff4, fn1, fn1 as fn12, fn21, fn23 } from '../../server0/src/api'
-import { fn3 } from './module3'
+import { change, change1, echo, echo1 } from '../../server0/src/api'
+import { change as change2 } from './model2'
 
-export async function getData() {
+export async function run() {
   try {
-    const results = await Promise.all([
-      call(fn1),
-      call(fn12),
-      call(fn23),
-      call(fn21),
-      call(aa),
-      call(bbb),
-      call(ff4),
-      fn3(),
-    ])
-    return `<pre>${JSON.stringify(results, null, 4)}</pre>`
+    const results = [
+      await call(echo, 'A'),
+      await call(echo, 'B'),
+      await call(change),
+      await call(echo, 'C'),
+      await call(echo, 'D'),
+      await call(echo1, 'E'),
+      await call(echo1, 'F'),
+      await call(change1),
+      await call(echo1, 'G'),
+      await call(echo1, 'H'),
+      await call(change2, 'I'),
+      await call(echo1, 'J'),
+    ]
+    return results
   } catch (error: unknown) {
     return String(error)
   }
