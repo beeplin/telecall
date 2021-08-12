@@ -1,5 +1,5 @@
 import call from '../../../src/call'
-import { aa, bbb, ff4, fn1, fn1 as fn12, fn21, fn23 } from '../../server/src/api'
+import { aa, bbb, ff4, fn1, fn1 as fn12, fn21, fn23 } from '../../server0/src/api'
 import { fn3 } from './module3'
 
 export async function getData() {

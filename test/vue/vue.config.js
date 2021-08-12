@@ -1,3 +1,3 @@
 module.exports = {
-  outputDir: '../server/public',
+  outputDir: '../server0/public',
 }

@@ -1,7 +1,7 @@
 import call from '../../../src/call'
-import { fn2 } from '../../server/src/api'
+import { api1 } from '../../server1/src/api'
 
 export async function fn3() {
-  const res = await call(fn2, -1)
+  const res = await call(api1, -1)
   return res
 }

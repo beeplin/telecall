@@ -5,7 +5,7 @@ import tele from '../../../dist/tele'
 import * as api from './api'
 import context from './context'
 
-const NAME = 'server'
+const NAME = 'server0'
 const PORT = 4000
 
 express()

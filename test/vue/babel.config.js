@@ -4,9 +4,13 @@ module.exports = {
     [
       '../../plugins/babel-plugin-telecall.js',
       {
-        server: {
+        server1: {
+          endpoint: 'http://localhost:4100/api',
+          targetPath: '../server1/src/api',
+        },
+        server0: {
           endpoint: 'http://localhost:4000/api',
-          targetPath: '../server/src/api',
+          targetPath: '../server0/src/api',
         },
       },
     ],
