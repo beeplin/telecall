@@ -14,6 +14,7 @@ export default function tele<T>(
 ): (req: express.Request, res: express.Response) => void {
   return (req, res) => {
     context.runWith(getInitialContext(req, res), () => {
+      res.setHeader('access-control-expose-headers', 'authorization')
       execute(req.body as TeleRequest<Fn>, api)
         .then((json) => {
           console.info(json)

@@ -3,7 +3,7 @@
 exports[`local run works 1`] = `
 Array [
   Object {
-    "id": "CCC",
+    "id": null,
     "method": "echo",
     "name": "0",
     "server": "local0",
@@ -23,7 +23,7 @@ Array [
     "id": "AAA",
     "method": "echo1",
     "res": Object {
-      "id": "DDD",
+      "id": null,
       "method": "echo",
       "name": "a",
       "server": "local1",

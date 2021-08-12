@@ -1,8 +1,9 @@
 import cors from 'cors'
 import express from 'express'
 import tele from '../../../dist/express'
+import { ExpressSession } from '../../shared/dist/session'
 import * as api from './api'
-import context, { ExpressSession } from './context'
+import context from './context'
 
 const NAME = 'server0'
 const PORT = 4000
