@@ -1,6 +1,6 @@
+import { FakeSession } from '../../../../src/session'
 import context0 from '../../../server0/src/context'
 import context1 from '../../../server1/src/context'
-import { FakeSession } from '../../../shared/src/session'
 import { run } from '../model'
 
 describe('local run', () => {

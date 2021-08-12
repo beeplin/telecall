@@ -1,18 +1,12 @@
 import context from './context'
 
-export async function login(id: string) {
+export function echo(input: string) {
   const ctx = context.get()
-  await ctx.session.start(id)
-  return { server: ctx.server, method: login.name, id: ctx.session.id }
+  return { server: ctx.server, method: echo.name, id: ctx.session.id, input }
 }
 
-export async function logout() {
+export async function change() {
   const ctx = context.get()
-  await ctx.session.end()
-  return { server: ctx.server, method: logout.name, id: ctx.session.id }
-}
-
-export function echo(name: string) {
-  const ctx = context.get()
-  return { server: ctx.server, method: echo.name, id: ctx.session.id, name }
+  ctx.session.changeId()
+  return { server: ctx.server, method: change.name, id: ctx.session.id }
 }

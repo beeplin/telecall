@@ -1,7 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import tele from '../../../dist/express'
-import { ExpressSession } from '../../shared/dist/session'
+import { ExpressSession } from '../../../dist/session'
 import * as api from './api'
 import context from './context'
 

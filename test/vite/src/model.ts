@@ -1,24 +1,22 @@
 import call from '../../../src/call'
-import { echo, echo1, login, login1, logout, logout1 } from '../../server0/src/api'
-import { login as login2 } from './modle2'
+import { change, change1, echo, echo1 } from '../../server0/src/api'
+import { change as change2 } from './modle2'
 
 export async function run() {
   try {
     const results = [
-      await call(echo, '0'),
-      await call(login, 'AAA'),
-      await call(echo, '2'),
-      await call(echo1, 'a'),
-      await call(login1, 'BBB'),
-      await call(echo1, 'b'),
-      await call(logout),
-      await call(echo, '4'),
-      await call(echo1, 'c'),
-      await call(logout1),
-      await call(echo1, 'd'),
-      await call(login, 'CCC'),
-      await call(login1, 'EEE'),
-      await call(login2, 'DDD', 'echo'),
+      await call(echo, 'A'),
+      await call(echo, 'B'),
+      await call(change),
+      await call(echo, 'C'),
+      await call(echo, 'D'),
+      await call(echo1, 'E'),
+      await call(echo1, 'F'),
+      await call(change1),
+      await call(echo1, 'G'),
+      await call(echo1, 'H'),
+      await call(change2, 'I'),
+      await call(echo1, 'J'),
     ]
     return results
   } catch (error: unknown) {
