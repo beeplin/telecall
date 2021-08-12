@@ -1,19 +1,21 @@
-/* eslint-disable import/no-namespace */
 import cors from 'cors'
 import express from 'express'
-import tele from '../../../dist/tele'
+import tele from '../../../dist/express'
 import * as api from './api'
-import context from './context'
+import context, { ExpressSession } from './context'
 
 const NAME = 'server0'
 const PORT = 4000
 
 express()
-  .use(cors())
-  .use(express.json())
+  .use(cors({ origin: true, credentials: true }))
   .post(
     '/api',
-    tele(api, context, () => ({ server: NAME })),
+    express.json(),
+    tele(api, context, (req, res) => ({
+      server: NAME,
+      session: new ExpressSession(req, res),
+    })),
   )
   .use(express.static('./public'))
   .listen(PORT, () => {

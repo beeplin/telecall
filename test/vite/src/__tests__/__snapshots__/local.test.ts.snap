@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`local run works 1`] = `
+Array [
+  Object {
+    "id": "CCC",
+    "method": "echo",
+    "name": "0",
+    "server": "local0",
+  },
+  Object {
+    "id": "AAA",
+    "method": "login",
+    "server": "local0",
+  },
+  Object {
+    "id": "AAA",
+    "method": "echo",
+    "name": "2",
+    "server": "local0",
+  },
+  Object {
+    "id": "AAA",
+    "method": "echo1",
+    "res": Object {
+      "id": "DDD",
+      "method": "echo",
+      "name": "a",
+      "server": "local1",
+    },
+    "server": "local0",
+  },
+  Object {
+    "id": "AAA",
+    "method": "login1",
+    "res": Object {
+      "id": "BBB",
+      "method": "login",
+      "server": "local1",
+    },
+    "server": "local0",
+  },
+  Object {
+    "id": "AAA",
+    "method": "echo1",
+    "res": Object {
+      "id": "BBB",
+      "method": "echo",
+      "name": "b",
+      "server": "local1",
+    },
+    "server": "local0",
+  },
+  Object {
+    "id": "",
+    "method": "logout",
+    "server": "local0",
+  },
+  Object {
+    "id": "",
+    "method": "echo",
+    "name": "4",
+    "server": "local0",
+  },
+  Object {
+    "id": "",
+    "method": "echo1",
+    "res": Object {
+      "id": "BBB",
+      "method": "echo",
+      "name": "c",
+      "server": "local1",
+    },
+    "server": "local0",
+  },
+  Object {
+    "id": "",
+    "method": "logout1",
+    "res": Object {
+      "id": "",
+      "method": "logout",
+      "server": "local1",
+    },
+    "server": "local0",
+  },
+  Object {
+    "id": "",
+    "method": "echo1",
+    "res": Object {
+      "id": "",
+      "method": "echo",
+      "name": "d",
+      "server": "local1",
+    },
+    "server": "local0",
+  },
+  Object {
+    "id": "CCC",
+    "method": "login",
+    "server": "local0",
+  },
+  Object {
+    "id": "CCC",
+    "method": "login1",
+    "res": Object {
+      "id": "EEE",
+      "method": "login",
+      "server": "local1",
+    },
+    "server": "local0",
+  },
+  Array [
+    Object {
+      "id": "DDD",
+      "method": "login",
+      "server": "local1",
+    },
+    Object {
+      "id": "DDD",
+      "method": "echo",
+      "name": "echo",
+      "server": "local1",
+    },
+  ],
+]
+`;

@@ -33,6 +33,7 @@ async function call<T extends Fn>(
     method: 'POST',
     headers: buildHeadersByPersistedToken(endpoint, sessionTokenPersistence),
     body: JSON.stringify(request),
+    credentials: 'include',
   })
   persistTokenFromResponseHeaders(
     rawResponse.headers,
