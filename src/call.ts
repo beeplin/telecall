@@ -60,7 +60,7 @@ function buildHeadersByPersistedToken(
   if (!sessionTokenPersistence || sessionTokenPersistence === 'localStorage') {
     const tokenName = getTokenName(endpoint)
     const token =
-      globalThis.localStorage?.getItem(tokenName) ?? memoryStorage[tokenName] ?? '' // TODO cookie fetch
+      globalThis.localStorage?.getItem(tokenName) ?? memoryStorage[tokenName] ?? ''
     headers.set('authorization', token)
   }
   return headers

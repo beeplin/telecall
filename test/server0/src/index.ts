@@ -1,5 +1,6 @@
 import cors from 'cors'
 import express from 'express'
+import path from 'path'
 import tele from '../../../dist/express'
 import { ExpressCookieSession } from '../../../dist/session'
 import * as api from './api'
@@ -18,7 +19,7 @@ express()
       session: new ExpressCookieSession(req, res, `sessionToken::${NAME}`),
     })),
   )
-  .use(express.static('./public'))
+  .use(express.static(path.join(__dirname, '../public')))
   .listen(PORT, () => {
     console.info(`${NAME} started on port ${PORT}`)
   })
