@@ -22,7 +22,7 @@ async function call<T extends Fn>(
 ): PromiseReturnType<T> {
   if (typeof fn === 'function') return fn(...params)
   nextId()
-  const { endpoint, method, sessionTokenPersistence } = fn
+  const { endpoint, method } = fn
   const request: TeleRequest<T> = {
     jsonrpc: '2.0',
     method,
@@ -31,15 +31,11 @@ async function call<T extends Fn>(
   }
   const rawResponse = await fetch(endpoint, {
     method: 'POST',
-    headers: buildHeadersByPersistedToken(endpoint, sessionTokenPersistence),
+    headers: buildHeadersByPersistedToken(endpoint),
     body: JSON.stringify(request),
     credentials: 'include',
   })
-  persistTokenFromResponseHeaders(
-    rawResponse.headers,
-    endpoint,
-    sessionTokenPersistence,
-  )
+  persistTokenFromResponseHeaders(rawResponse.headers, endpoint)
   const response = (await rawResponse.json()) as TeleResponse<T>
   handleErrors(response, request)
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -50,14 +46,12 @@ function nextId() {
   callId = callId >= Number.MAX_SAFE_INTEGER ? Number.MIN_SAFE_INTEGER : callId + 1
 }
 
+let tokenIsInHeader = false
 const memoryStorage: Record<string, string> = {}
 
-function buildHeadersByPersistedToken(
-  endpoint: string,
-  sessionTokenPersistence?: string,
-) {
+function buildHeadersByPersistedToken(endpoint: string) {
   const headers = new Headers({ 'content-type': 'application/json' })
-  if (!sessionTokenPersistence || sessionTokenPersistence === 'localStorage') {
+  if (tokenIsInHeader) {
     const tokenName = getTokenName(endpoint)
     const token =
       globalThis.localStorage?.getItem(tokenName) ?? memoryStorage[tokenName] ?? ''
@@ -66,19 +60,13 @@ function buildHeadersByPersistedToken(
   return headers
 }
 
-function persistTokenFromResponseHeaders(
-  headers: Headers,
-  endpoint: string,
-  sessionTokenPersistence?: string,
-) {
-  if (!sessionTokenPersistence || sessionTokenPersistence === 'localStorage') {
-    const token = headers.get('authorization')
-    if (token != null) {
-      const tokenName = getTokenName(endpoint)
-      if (globalThis.localStorage) localStorage.setItem(tokenName, token)
-      else memoryStorage[tokenName] = token
-    }
-  }
+function persistTokenFromResponseHeaders(headers: Headers, endpoint: string) {
+  const token = headers.get('authorization')
+  if (token == null) return
+  tokenIsInHeader = true
+  const tokenName = getTokenName(endpoint)
+  if (globalThis.localStorage) localStorage.setItem(tokenName, token)
+  else memoryStorage[tokenName] = token
 }
 
 function handleErrors<T extends Fn>(

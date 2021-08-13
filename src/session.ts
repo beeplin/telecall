@@ -10,13 +10,22 @@ export interface IdGenerator {
 export class FakeIdGenerator implements IdGenerator {
   private static id = 1000
 
+  static reset(): void {
+    FakeIdGenerator.id = 1000
+  }
+
   generate(): string {
     FakeIdGenerator.id += 1
     return String(FakeIdGenerator.id)
   }
 }
 
-export abstract class Session {
+export interface Session {
+  id: string | null
+  changeId: () => void
+}
+
+abstract class BaseSession implements Session {
   protected _id: string | null = null
 
   get id(): string | null {
@@ -26,7 +35,7 @@ export abstract class Session {
   abstract changeId(): void
 }
 
-export class FakeSession extends Session {
+export class FakeSession extends BaseSession {
   constructor(private readonly idGenerator: IdGenerator = new FakeIdGenerator()) {
     super()
     this.changeId()
@@ -37,7 +46,7 @@ export class FakeSession extends Session {
   }
 }
 
-export class ExpressHeaderSession extends Session {
+export class ExpressHeaderSession extends BaseSession {
   constructor(
     private readonly req: express.Request,
     private readonly res: express.Response,
@@ -55,7 +64,7 @@ export class ExpressHeaderSession extends Session {
   }
 }
 
-export class ExpressCookieSession extends Session {
+export class ExpressCookieSession extends BaseSession {
   // eslint-disable-next-line max-params
   constructor(
     private readonly req: express.Request,

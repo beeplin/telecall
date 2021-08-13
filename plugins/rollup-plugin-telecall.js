@@ -31,27 +31,17 @@ export default function telecall(opts) {
     transform(code, id) {
       const [filePath, targetName] = id.split(SEP)
       if (!targetName) return null
-      const { endpoint, sessionTokenPersistence } = opts[targetName]
-      return convertTsToExportsByTsAst(
-        filePath,
-        code,
-        endpoint,
-        sessionTokenPersistence,
-      )
+      const { endpoint } = opts[targetName]
+      return convertTsToExportsByTsAst(filePath, code, endpoint)
     },
   }
 }
 
-// eslint-disable-next-line max-params
-function convertTsToExportsByTsAst(filePath, code, endpoint, sessionTokenPersistence) {
+function convertTsToExportsByTsAst(filePath, code, endpoint) {
   const ast = getTsAst(filePath, code, ScriptTarget.Latest)
   const allExports = getAllExportsFromTsAstAndCode(ast, code)
   const methods = getExportedNamesFromTsAst(ast)
-  const namedExports = convertMethodsToNamedExports(
-    methods,
-    endpoint,
-    sessionTokenPersistence,
-  )
+  const namedExports = convertMethodsToNamedExports(methods, endpoint)
   return namedExports + allExports
 }
 
@@ -76,12 +66,8 @@ function getExportedNamesFromTsAst(ast) {
   )
 }
 
-function convertMethodsToNamedExports(methods, endpoint, sessionTokenPersistence) {
-  const part = `endpoint: '${endpoint}'${
-    sessionTokenPersistence
-      ? `, sessionTokenPersistence: '${sessionTokenPersistence}'`
-      : ''
-  }`
+function convertMethodsToNamedExports(methods, endpoint) {
+  const part = `endpoint: '${endpoint}'`
   return methods.reduce((acc, method) => {
     const prefix = method === 'default' ? 'default' : `const ${method} =`
     return `${acc}export ${prefix} { ${part}, method: '${method}' };\n`

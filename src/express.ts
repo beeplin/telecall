@@ -6,6 +6,7 @@ import type { Fn, TeleRequest } from './types'
 const HTTP_OK = 200
 const HTTP_BAD_REQUEST = 400
 const HTTP_INTERNAL_SERVER_ERROR = 500
+const LOGGING = process.env.LOGGING ?? false
 
 export default function tele<T extends Record<string, unknown>>(
   api: Record<string, Fn>,
@@ -17,11 +18,11 @@ export default function tele<T extends Record<string, unknown>>(
       res.setHeader('access-control-expose-headers', 'authorization')
       execute(req.body as TeleRequest<Fn>, api)
         .then((json) => {
-          console.info(json)
+          if (LOGGING) console.info(json)
           res.status(json.error ? HTTP_BAD_REQUEST : HTTP_OK).json(json)
         })
         .catch((error) => {
-          console.error(error)
+          if (LOGGING) console.error(error)
           res.status(HTTP_INTERNAL_SERVER_ERROR).json(error)
         })
     })

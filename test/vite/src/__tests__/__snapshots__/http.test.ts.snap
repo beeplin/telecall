@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`http run works for vite 1`] = `
+exports[`http run works for vite build 1`] = `
 "[
     {
         \\"server\\": \\"server0\\",
@@ -112,124 +112,6 @@ exports[`http run works for vite 1`] = `
             \\"server\\": \\"server1\\",
             \\"method\\": \\"echo\\",
             \\"id\\": \\"1002\\",
-            \\"input\\": \\"J\\"
-        }
-    }
-]"
-`;
-
-exports[`http run works for vite build 1`] = `
-"[
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo\\",
-        \\"id\\": \\"1002\\",
-        \\"input\\": \\"A\\"
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo\\",
-        \\"id\\": \\"1002\\",
-        \\"input\\": \\"B\\"
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"change\\",
-        \\"id\\": \\"1003\\"
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo\\",
-        \\"id\\": \\"1003\\",
-        \\"input\\": \\"C\\"
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo\\",
-        \\"id\\": \\"1003\\",
-        \\"input\\": \\"D\\"
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo1\\",
-        \\"id\\": \\"1003\\",
-        \\"res\\": {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"echo\\",
-            \\"id\\": \\"1002\\",
-            \\"input\\": \\"E\\"
-        }
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo1\\",
-        \\"id\\": \\"1003\\",
-        \\"res\\": {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"echo\\",
-            \\"id\\": \\"1002\\",
-            \\"input\\": \\"F\\"
-        }
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"change1\\",
-        \\"id\\": \\"1003\\",
-        \\"res\\": {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"change\\",
-            \\"id\\": \\"1005\\"
-        }
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo1\\",
-        \\"id\\": \\"1003\\",
-        \\"res\\": {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"echo\\",
-            \\"id\\": \\"1005\\",
-            \\"input\\": \\"G\\"
-        }
-    },
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo1\\",
-        \\"id\\": \\"1003\\",
-        \\"res\\": {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"echo\\",
-            \\"id\\": \\"1005\\",
-            \\"input\\": \\"H\\"
-        }
-    },
-    [
-        {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"echo\\",
-            \\"id\\": \\"1004\\",
-            \\"input\\": \\"I\\"
-        },
-        {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"change\\",
-            \\"id\\": \\"1006\\"
-        },
-        {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"echo\\",
-            \\"id\\": \\"1006\\",
-            \\"input\\": \\"I\\"
-        }
-    ],
-    {
-        \\"server\\": \\"server0\\",
-        \\"method\\": \\"echo1\\",
-        \\"id\\": \\"1003\\",
-        \\"res\\": {
-            \\"server\\": \\"server1\\",
-            \\"method\\": \\"echo\\",
-            \\"id\\": \\"1005\\",
             \\"input\\": \\"J\\"
         }
     }

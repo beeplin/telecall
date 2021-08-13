@@ -10,12 +10,10 @@ module.exports = {
         server1: {
           targetPath: '../server1/src/api',
           endpoint: 'http://localhost:4100/api',
-          sessionTokenPersistence: 'cookie',
         },
         server2: {
           targetPath: '../server2/src/api',
           endpoint: 'http://localhost:4200/api',
-          sessionTokenPersistence: 'cookie',
         },
       },
     ],
