@@ -10,14 +10,8 @@ export default defineConfig({
   plugins: [
     {
       ...telecall({
-        server0: {
-          targetPath: '../server0/src/api',
-          endpoint: 'http://localhost:4000/api',
-        },
-        server1: {
-          targetPath: '../server1/src/api',
-          endpoint: 'http://localhost:4100/api',
-        },
+        '../server0/src/api': 'http://localhost:4000/api',
+        '../server1/src/api': 'http://localhost:4100/api',
       }),
       enforce: 'pre',
     },

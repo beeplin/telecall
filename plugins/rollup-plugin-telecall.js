@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import path from 'path'
 import { createSourceFile as getTsAst, ScriptTarget, SyntaxKind as K } from 'typescript'
 
 const SEP = '?telecall='
@@ -8,17 +8,16 @@ export default function telecall(opts) {
     name: 'telecall',
 
     async resolveId(source, importer) {
-      const [importerPath, _targetName] = importer?.split(SEP) ?? ''
+      const [importerPath, existingModulePath] = importer?.split(SEP) ?? ''
       const resolved = await this.resolve(source, importerPath, { skipSelf: true })
       const id = resolved?.id
-      const targetName =
-        _targetName ??
-        Object.keys(opts).find((name) => {
-          const { targetPath } = opts[name]
-          const absPath = resolve(process.cwd(), targetPath).replace(/\\/gu, '/')
+      const modulePath =
+        existingModulePath ??
+        Object.keys(opts).find((key) => {
+          const absPath = path.resolve(process.cwd(), key).replace(/\\/gu, '/')
           return id.startsWith(absPath)
         })
-      const result = targetName ? id + SEP + targetName : id
+      const result = modulePath ? id + SEP + modulePath : id
       return result
     },
 
@@ -29,9 +28,9 @@ export default function telecall(opts) {
     // },
 
     transform(code, id) {
-      const [filePath, targetName] = id.split(SEP)
-      if (!targetName) return null
-      const { endpoint } = opts[targetName]
+      const [filePath, modulePath] = id.split(SEP)
+      if (!modulePath) return null
+      const endpoint = opts[modulePath]
       return convertTsToExportsByTsAst(filePath, code, endpoint)
     },
   }

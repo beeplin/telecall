@@ -4,25 +4,24 @@ const template = require('@babel/template')
 module.exports = () => ({
   visitor: {
     ImportDeclaration(p, { file, opts }) {
-      const targetFullPath = path
+      const moduleAbsPath = path
         .resolve(path.dirname(file.opts.filename), p.node.source.value)
         .replace(/\\/gu, '/')
-      const targetName = Object.keys(opts).find((name) => {
-        const { targetPath } = opts[name]
-        const absPath = path.resolve(process.cwd(), targetPath).replace(/\\/gu, '/')
-        return targetFullPath.startsWith(absPath)
+      const modulePath = Object.keys(opts).find((key) => {
+        const absPath = path.resolve(process.cwd(), key).replace(/\\/gu, '/')
+        return moduleAbsPath.startsWith(absPath)
       })
-      if (!targetName) return
-      const opt = opts[targetName]
-      const consts = convertImportNodeToConstsString(p.node, opt)
+      if (!modulePath) return
+      const endpoint = opts[modulePath]
+      const consts = convertImportNodeToConstsString(p.node, endpoint)
       p.replaceWithMultiple(template.statements.ast(consts))
     },
   },
 })
 
-function convertImportNodeToConstsString(node, opt) {
+function convertImportNodeToConstsString(node, endpoint) {
   const names = getNamesFromEstreeNode(node)
-  const consts = buildConstsFromNamesAndPath(names, opt)
+  const consts = buildConstsFromNamesAndPath(names, endpoint)
   return consts
 }
 
@@ -38,8 +37,7 @@ function getNamesFromEstreeNode(node) {
   }))
 }
 
-function buildConstsFromNamesAndPath(names, opt) {
-  const { endpoint } = opt
+function buildConstsFromNamesAndPath(names, endpoint) {
   const part = `endpoint: '${endpoint}'`
   return names.reduce((acc, { local, imported }) => {
     return imported === '*'
