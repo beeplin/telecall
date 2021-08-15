@@ -1,5 +1,6 @@
 import cors from 'cors'
 import express from 'express'
+import '../../../dist'
 import tele from '../../../dist/express'
 import { ExpressCookieSession, ExpressHeaderSession } from '../../../dist/session'
 import * as api from './api'

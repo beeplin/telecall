@@ -2,13 +2,13 @@
   "name": "telecall",
   "version": "1.0.8",
   "description": "No more HTTP API. Call back-end NodeJS functions directly from front-end, with full Typescript typing support.",
-  "main": "dist/call.js",
+  "main": "dist/index.js",
   "files": [
     "dist/**",
     "src/**"
   ],
   "scripts": {
-    "build": "tsc --build --clean && tsc --build",
+    "build": "rm -rf dist && tsc --build",
     "test": "npm run build && jest",
     "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx,.vue --ignore-path .gitignore .",
     "format": "prettier --write --ignore-path .gitignore .",

@@ -1,6 +1,6 @@
 import context from './context'
 
-export function echo(input: string) {
+export async function echo(input: string) {
   const ctx = context.get()
   return { server: ctx.server, method: echo.name, id: ctx.session.id, input }
 }

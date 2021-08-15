@@ -38,11 +38,10 @@ function getNamesFromEstreeNode(node) {
 }
 
 function buildConstsFromNamesAndPath(names, endpoint) {
-  const part = `endpoint: '${endpoint}'`
   return names.reduce((acc, { local, imported }) => {
     return imported === '*'
-      ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return { ${part}, method: p }}}); `
-      : `${acc}const ${local} = { ${part}, method: '${imported}' }; `
+      ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return __telecall__('${endpoint}', p) } });`
+      : `${acc}const ${local} = __telecall__('${endpoint}', '${imported}');`
   }, '')
 }
 

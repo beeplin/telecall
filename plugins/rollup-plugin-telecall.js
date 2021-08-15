@@ -66,10 +66,9 @@ function getExportedNamesFromTsAst(ast) {
 }
 
 function convertMethodsToNamedExports(methods, endpoint) {
-  const part = `endpoint: '${endpoint}'`
   return methods.reduce((acc, method) => {
     const prefix = method === 'default' ? 'default' : `const ${method} =`
-    return `${acc}export ${prefix} { ${part}, method: '${method}' };\n`
+    return `${acc}export ${prefix} __telecall__('${endpoint}', '${method}');\n`
   }, '')
 }
 

@@ -1,22 +1,22 @@
-import call from '../../../src/call'
+import '../../../src'
 import { change, change1, echo, echo1 } from '../../server0/src/api'
 import { change as change2 } from './model2'
 
 export async function run() {
   try {
     const results = [
-      await call(echo, 'A'),
-      await call(echo, 'B'),
-      await call(change),
-      await call(echo, 'C'),
-      await call(echo, 'D'),
-      await call(echo1, 'E'),
-      await call(echo1, 'F'),
-      await call(change1),
-      await call(echo1, 'G'),
-      await call(echo1, 'H'),
-      await call(change2, 'I'),
-      await call(echo1, 'J'),
+      await echo('A'),
+      await echo('B'),
+      await change(),
+      await echo('C'),
+      await echo('D'),
+      await echo1('E'),
+      await echo1('F'),
+      await change1(),
+      await echo1('G'),
+      await echo1('H'),
+      await change2('I'),
+      await echo1('J'),
     ]
     return results
   } catch (error: unknown) {
