@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from 'async_hooks'
 import type { Fn } from './types'
 
-export class ContextStore<C extends Record<string, unknown>> {
+export class ContextStore<C> {
   private als = new AsyncLocalStorage<{ context: C }>()
 
   private fakeContext: C | null = null
