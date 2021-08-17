@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "files": [
     "dist/**",
-    "src/**"
+    "src/**",
+    "plugins/**"
   ],
   "scripts": {
     "build": "tsc --build --clean && tsc --build",
