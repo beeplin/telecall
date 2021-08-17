@@ -6,7 +6,15 @@ import type { Fn, PromiseReturnType, TeleRequest, TeleResponse } from './types'
 
 const JSON_RPC_INVALID_REQUEST = -32600
 
+let memoryStorage: Record<string, string> = {}
 let callId = 0
+let tokenIsInHeader = false
+
+export function reset(): void {
+  memoryStorage = {}
+  callId = 0
+  tokenIsInHeader = false
+}
 
 export default function telecall(endpoint: string, method: string) {
   return async <T extends Fn>(...params: Parameters<T>): PromiseReturnType<T> => {
@@ -34,9 +42,6 @@ export default function telecall(endpoint: string, method: string) {
 function nextId() {
   callId = callId >= Number.MAX_SAFE_INTEGER ? Number.MIN_SAFE_INTEGER : callId + 1
 }
-
-let tokenIsInHeader = false
-const memoryStorage: Record<string, string> = {}
 
 function buildHeadersByPersistedToken(endpoint: string) {
   const headers = new Headers({ 'content-type': 'application/json' })
