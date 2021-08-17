@@ -1,76 +1,74 @@
 import path from 'path'
-import { createSourceFile as getTsAst, ScriptTarget, SyntaxKind as K } from 'typescript'
 
-const SEP = '?telecall='
+const TELECALL_PATH = process.env.TELECALL_TEST ? '../../../src' : 'telecall'
 
 export default function telecall(opts) {
+  const id2endpoint = Object.keys(opts).reduce((acc, key) => {
+    const relativePath = key.endsWith('.ts') ? key : `${key}.ts`
+    const absolutePath = path.resolve(process.cwd(), relativePath).replace(/\\/gu, '/')
+    return { ...acc, [absolutePath]: opts[key] }
+  }, {})
+
   return {
     name: 'telecall',
 
-    async resolveId(source, importer) {
-      const [importerPath, existingModulePath] = importer?.split(SEP) ?? ''
-      const resolved = await this.resolve(source, importerPath, { skipSelf: true })
-      const id = resolved?.id
-      const modulePath =
-        existingModulePath ??
-        Object.keys(opts).find((key) => {
-          const absPath = path.resolve(process.cwd(), key).replace(/\\/gu, '/')
-          return id.startsWith(absPath)
-        })
-      const result = modulePath ? id + SEP + modulePath : id
-      return result
-    },
-
-    // async load(id) {
-    //   const [filePath, telecallPath] = id.split(SEP)
-    //   if (!telecallPath) return null
-    //   return convertTsToExportsByEsbuildAndRegex_SLOW_UNSAFE(filePath, telecallPath)
-    // },
-
-    transform(code, id) {
-      const [filePath, modulePath] = id.split(SEP)
-      if (!modulePath) return null
-      const endpoint = opts[modulePath]
-      return convertTsToExportsByTsAst(filePath, code, endpoint)
+    load(id) {
+      const endpoint = id2endpoint[id]
+      if (!endpoint) return null
+      return {
+        code: `
+          import __telecall__ from '${TELECALL_PATH}/client'
+          export default new Proxy(
+            {},
+            {
+              get(t, p) {
+                return __telecall__('${endpoint}', p)
+              },
+            },
+          )`,
+        syntheticNamedExports: true,
+      }
     },
   }
 }
 
-function convertTsToExportsByTsAst(filePath, code, endpoint) {
-  const ast = getTsAst(filePath, code, ScriptTarget.Latest)
-  const allExports = getAllExportsFromTsAstAndCode(ast, code)
-  const methods = getExportedNamesFromTsAst(ast)
-  const namedExports = convertMethodsToNamedExports(methods, endpoint)
-  return namedExports + allExports
-}
+// import { createSourceFile as getTsAst, ScriptTarget, SyntaxKind as K } from 'typescript'
 
-function getAllExportsFromTsAstAndCode(ast, code) {
-  return ast.statements
-    .filter((s) => s.kind === K.ExportDeclaration && !s.exportClause)
-    .map((s) => code.slice(s.pos, s.end))
-    .reduce((acc, str) => `${acc}${str};\n`, '\n')
-}
+// function convertTsToExportsByTsAst(filePath, code, endpoint) {
+//   const ast = getTsAst(filePath, code, ScriptTarget.Latest)
+//   const allExports = getAllExportsFromTsAstAndCode(ast, code)
+//   const methods = getExportedNamesFromTsAst(ast)
+//   const namedExports = convertMethodsToNamedExports(methods, endpoint)
+//   return namedExports + allExports
+// }
 
-function getExportedNamesFromTsAst(ast) {
-  return ast.statements.flatMap((s) =>
-    s.kind === K.FunctionDeclaration &&
-    s.modifiers?.some((m) => m.kind === K.ExportKeyword)
-      ? s.name.escapedText
-      : s.kind === K.ExportDeclaration && s.exportClause
-      ? s.exportClause.elements?.map((e) => e.name.escapedText) ??
-        s.exportClause.name.escapedText
-      : s.kind === K.ExportAssignment
-      ? 'default'
-      : [],
-  )
-}
+// function getAllExportsFromTsAstAndCode(ast, code) {
+//   return ast.statements
+//     .filter((s) => s.kind === K.ExportDeclaration && !s.exportClause)
+//     .map((s) => code.slice(s.pos, s.end))
+//     .reduce((acc, str) => `${acc}${str};\n`, '\n')
+// }
 
-function convertMethodsToNamedExports(methods, endpoint) {
-  return methods.reduce((acc, method) => {
-    const prefix = method === 'default' ? 'default' : `const ${method} =`
-    return `${acc}export ${prefix} __telecall__('${endpoint}', '${method}');\n`
-  }, '')
-}
+// function getExportedNamesFromTsAst(ast) {
+//   return ast.statements.flatMap((s) =>
+//     s.kind === K.FunctionDeclaration &&
+//     s.modifiers?.some((m) => m.kind === K.ExportKeyword)
+//       ? s.name.escapedText
+//       : s.kind === K.ExportDeclaration && s.exportClause
+//       ? s.exportClause.elements?.map((e) => e.name.escapedText) ??
+//         s.exportClause.name.escapedText
+//       : s.kind === K.ExportAssignment
+//       ? 'default'
+//       : [],
+//   )
+// }
+
+// function convertMethodsToNamedExports(methods, endpoint) {
+//   return methods.reduce((acc, method) => {
+//     const prefix = method === 'default' ? 'default' : `const ${method} =`
+//     return `${acc}export ${prefix} __telecall__('${endpoint}', '${method}');\n`
+//   }, '')
+// }
 
 // function getRelativePath(absPath, root) {
 //   return normalizePath(

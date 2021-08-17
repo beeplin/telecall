@@ -1,4 +1,3 @@
-import '../../../src'
 import { change, change1, echo, echo1 } from '../../server0/src/api'
 import { change as change2 } from './model2'
 

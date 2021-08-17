@@ -1,9 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import path from 'path'
-import '../../../dist'
-import tele from '../../../dist/express'
-import { ExpressCookieSession, ExpressHeaderSession } from '../../../dist/session'
+import { ExpressCookieSession, ExpressHeaderSession, telecall } from '../../../dist'
 import * as api from './api'
 import context from './context'
 
@@ -17,7 +15,7 @@ express()
   .post(
     '/api',
     express.json(),
-    tele(api, context, (req, res) => ({
+    telecall(api, context, (req, res) => ({
       server: NAME,
       session:
         SESSION === 'cookie'

@@ -8,13 +8,10 @@ export default defineConfig({
     emptyOutDir: true,
   },
   plugins: [
-    {
-      ...telecall({
-        '../server0/src/api': 'http://localhost:4000/api',
-        '../server1/src/api': 'http://localhost:4100/api',
-      }),
-      enforce: 'pre',
-    },
+    telecall({
+      '../server0/src/api': 'http://localhost:4000/api',
+      '../server1/src/api': 'http://localhost:4100/api',
+    }),
     vue(),
   ],
 })

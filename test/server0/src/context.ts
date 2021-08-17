@@ -1,5 +1,5 @@
-import { ContextStore } from '../../../dist/context'
-import type { Session } from '../../../dist/session'
+import type { Session } from '../../../dist'
+import { ContextStore } from '../../../dist'
 
 const context = new ContextStore<{ server: string; session: Session }>()
 
