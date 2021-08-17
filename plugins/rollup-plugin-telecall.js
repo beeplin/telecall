@@ -1,6 +1,6 @@
 import path from 'path'
 
-const TELECALL_PATH = process.env.TELECALL_TEST ? '../../../src' : 'telecall'
+const TELECALL_PATH = process.env.TELECALL_TEST ? '../../..' : 'telecall'
 
 export default function telecall(opts) {
   const id2endpoint = Object.keys(opts).reduce((acc, key) => {
@@ -17,7 +17,7 @@ export default function telecall(opts) {
       if (!endpoint) return null
       return {
         code: `
-          import __telecall__ from '${TELECALL_PATH}/client'
+          import __telecall__ from '${TELECALL_PATH}/src/client'
           export default new Proxy(
             {},
             {

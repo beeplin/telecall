@@ -1,7 +1,7 @@
 const path = require('path')
 const template = require('@babel/template')
 
-const TELECALL_PATH = process.env.TELECALL_TEST ? '../../../dist' : 'telecall'
+const TELECALL_PATH = process.env.TELECALL_TEST ? '../../..' : 'telecall'
 
 module.exports = () => ({
   visitor: {
@@ -44,7 +44,7 @@ function buildConstsFromNamesAndPath(names, endpoint) {
     return imported === '*'
       ? `${acc}const ${local} = new Proxy({}, { get: function(t, p) { return __telecall__('${endpoint}', p) } });`
       : `${acc}const ${local} = telecall('${endpoint}', '${imported}');`
-  }, `import __telecall__ from '${TELECALL_PATH}/client';`)
+  }, `import __telecall__ from '${TELECALL_PATH}/dist/client';`)
 }
 
 // function getRelativePath(absPath, root) {
