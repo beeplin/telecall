@@ -8,7 +8,7 @@ const HTTP_BAD_REQUEST = 400
 const HTTP_INTERNAL_SERVER_ERROR = 500
 const LOGGING = process.env.LOGGING ?? false
 
-export function telecall<T extends Record<string, unknown>>(
+export function telecall<T>(
   api: Record<string, Fn>,
   context: ContextStore<T>,
   getInitialContext: (req: express.Request, res: express.Response) => T,

@@ -8,7 +8,7 @@
     "src/**"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc --build",
+    "build": "tsc --build --clean && tsc --build",
     "test": "npm run build && jest",
     "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx,.vue --ignore-path .gitignore .",
     "format": "prettier --write --ignore-path .gitignore .",
